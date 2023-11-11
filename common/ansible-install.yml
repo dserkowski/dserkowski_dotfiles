@@ -1,0 +1,30 @@
+---
+- name: Install all standard tools
+  hosts: localhost
+  gather_facts: yes
+  become: no
+  vars:
+    bashrc: "{{ ansible_env.HOME }}/.bashrc"
+
+  tasks:
+    - name: Install required packages
+      package:
+        name:
+          - vim
+          - git
+          - gitk
+        state: present
+      become: yes
+      
+    - name: Install packages via Snap
+      community.general.snap:
+        name: "{{ item.name }}"
+        classic: "{{ item.classic }}"
+      become: yes
+      loop:
+        - name: brave
+          classic: no
+        - name: code
+          classic: yes
+        - name: yubioath-desktop
+          classic: no

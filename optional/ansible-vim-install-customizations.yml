@@ -14,7 +14,7 @@
         name:
           - vim
           - git
-        state: latest
+        state: present
       become: yes
       tags:
         - install_packages

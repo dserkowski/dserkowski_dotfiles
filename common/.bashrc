@@ -19,6 +19,7 @@ alias envEdit="editEnv"
 
 alias ..="cd .."
 alias cddotfiles="cd $DOTFILES_PATH"
+alias cdrepos="cd ~/repos"
 
 function runWebApps() {
     bash $DOTFILES_PATH/common/scripts/app_evernote.sh

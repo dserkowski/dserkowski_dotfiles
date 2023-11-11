@@ -116,16 +116,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1"
+set $ws1 "1:www"
 set $ws2 "2"
 set $ws3 "3"
 set $ws4 "4"
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
+set $ws8 "8:files"
+set $ws9 "9:term"
+set $ws10 "10:msg"
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -260,7 +260,7 @@ bindsym $mod+Shift+e exec --no-startup-id qdbus-qt5 org.kde.ksmserver /KSMServer
 #bindsym $mod+Control+l move workspace to output primary
 bindsym $mod+Control+l move workspace to output right
 bindsym $mod+Control+h move workspace to output left
-#bindsym $mod+Control+j move workspace to output down
+#bindsym $mod+Control+j:www
 #bindsym $mod+Control+l move workspace to output up
 #bindsym $mod+Mod1+o move workspace to output left
 
@@ -271,5 +271,29 @@ bindsym $mod+Shift+Control+h move container to output left
 bindsym $mod+Shift+Control+j move container to output down
 bindsym $mod+Shift+Control+k move container to output up
 
-exec --no-startup-id brave
+exec --no-startup-id i3-msg 'workspace 10:msg; exec signal-desktop'
+exec --no-startup-id i3-msg 'workspace 9:term; exec terminator'
+exec --no-startup-id i3-msg 'workspace 8:files; exec dolphin'
+
+#exec --no-startup-id i3-msg 'workspace 1:www; exec brave'
+exec i3-msg workspace 1:www
+exec brave
+
+exec --no-startup-id bash -ic 'source ~/.bashrc && runWebApps' 
+
 bindsym $mod+c exec terminator -x 'vim ~/.config/i3/config' 
+bindsym --release $alt_l+d exec "sleep 0.05 && ~/scripts/typeDate.sh"
+bindsym --release $alt_l+Shift+d exec "sleep 0.05 && ~/scripts/typeDateTime.sh"
+
+# found using xprobe command
+for_window [instance="www.evernote.com__client_web" class="Brave-browser"] floating disable
+assign [instance="www.evernote.com__client_web" class="Brave-browser"] 10:msg
+for_window [instance="mail.google.com__mail_u_0" class="Brave-browser"] floating disable
+assign [instance="mail.google.com__mail_u_0" class="Brave-browser"] 10:msg
+for_window [instance="www.messenger.com__t" class="Brave-browser"] floating disable
+assign [instance="www.messenger.com__t" class="Brave-browser"] 10:msg
+assign [instance="signal" class="Signal"] 10:msg
+#exec_always --no-startup-id bash -c "source ~/.bashrc && runWebApps"
+#exec_always --no-startuo-id bash -c "runWebApps" 
+
+#gaps inner all set 20

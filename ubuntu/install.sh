@@ -3,7 +3,8 @@ set -e
 
 sudo apt update
 
-#sudo apt -y ansible-core ansible 
+#sudo apt install -y vim
+sudo apt install -y ansible 
 sudo apt install -y mc
 
 

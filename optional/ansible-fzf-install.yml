@@ -1,0 +1,22 @@
+---
+- name: Install fzf with CLI integration
+  hosts: localhost
+  gather_facts: yes
+  become: no
+  vars:
+    bashrc: "{{ ansible_env.HOME }}/.bashrc"
+
+  tasks:
+    - name: Install required packages
+      git:
+        dest: "~/.fzf"
+        repo: "https://github.com/junegunn/fzf.git"
+        clone: yes
+        update: yes
+        recursive: no
+        depth: 1
+
+    - name: Install autocompletion and key binding
+      command:
+        chdir: "{{ ansible_env.HOME }}"
+        cmd: .fzf/install

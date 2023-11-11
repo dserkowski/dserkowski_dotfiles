@@ -1,8 +1,10 @@
 
+set -e
+
 sudo pacman -Syu
 yay -Syu
 
-sudo pacman -S --noconfirm ansible-core ansible 
+#sudo pacman -S --noconfirm ansible-core ansible 
 sudo pacman -S --noconfirm mc
 
 

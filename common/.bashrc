@@ -8,11 +8,14 @@ COMMON_BASHRC_INITIALIZED="1"
 function reloadEnv() {
     unset COMMON_BASHRC_INITIALIZED
     source ~/.bashrc
+    echo "Env reloaded"
 }
+alias envReload="reloadEnv"
 
 function editEnv() {
     mc $DOTFILES_PATH; reloadEnv
 }
+alias envEdit="editEnv"
 
 alias ..="cd .."
 alias cddotfiles="cd $DOTFILES_PATH"

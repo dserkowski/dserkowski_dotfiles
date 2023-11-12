@@ -16,8 +16,6 @@
           - git
         state: present
       become: yes
-      tags:
-        - install_packages
 
     - name: Ensure .vim/{autoload,bundle} directory exists
       file:
@@ -41,7 +39,6 @@
         repo: "{{ item.url }}"
         clone: yes
         update: yes
-        recursive: no
         depth: 1
       loop:
       - name: vim-airline

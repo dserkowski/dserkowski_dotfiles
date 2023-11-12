@@ -1,0 +1,86 @@
+---
+- name: Install Btrfs backup tools - Snapper and Btrfs Assistant
+  hosts: localhost
+  gather_facts: yes
+  become: no
+  vars:
+    bashrc: "{{ ansible_env.HOME }}/.bashrc"
+      
+  tasks:
+
+    - name: Install required packages
+      become: yes
+      package:
+        state: present
+        name: 
+          - snapper
+          - snapper-gui
+          - build-essential
+
+    - name: Fetching grub-brtfs
+      git:
+        repo: https://github.com/Antynea/grub-btrfs.git
+        dest: ~/.grub-btrfs
+        clone: yes
+        update: yes
+        depth: 1
+
+    - name: Grub-brtfs make and install
+      become: yes
+      make:
+        chdir: ~/.grub-btrfs
+        target: install
+
+          # migration-assistant dependencies
+          # as per instruction here https://gitlab.com/btrfs-assistant/btrfs-assistant
+    #       - git 
+    #       - cmake 
+    #       - qtbase5-dev 
+    #       - qttools5-dev 
+    #       - fonts-noto 
+    #       - libqt5svg5 
+    #       - libqt5core5a 
+    #       - g++ 
+    #       - libbtrfs-dev 
+    #       - libbtrfsutil-dev
+
+    # - name: fetch btrfs repo if not exist
+    #   git:
+    #     repo: git@gitlab.com:btrfs-assistant/btrfs-assistant.git
+    #     dest: ~/.btrfs_assistant
+    #     update: no # just ensure the repo is downloaded
+
+    # - name: get new tags from remote
+    #   shell: "git fetch --tags"
+    #   args:
+    #     chdir: ~/.btrfs_assistant
+
+    # - name: get latest tag name
+    #   shell: "git describe --tags `git rev-list --tags --max-count=1`"
+    #   args:
+    #     chdir: ~/.btrfs_assistant
+    #   register: latest_tag
+
+    # - name: checkout the latest tag
+    #   git:
+    #     repo: git@gitlab.com:btrfs-assistant/btrfs-assistant.git
+    #     dest: ~/.btrfs_assistant
+    #     version: latest_tag.stdout
+    #     clone: yes
+    #     update: yes
+    #     depth: 1
+
+    # -  name: "cmake"
+    #    shell: "cmake -B build -S . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE='Release'"
+    #    args:
+    #      chdir: ~/.btrfs_assistant
+
+    # -  name: "make"
+    #    make:
+    #      chdir: ~/.btrfs_assistant
+
+    # -  name: "make and install as root"
+    #    become: yes
+    #    make:
+    #      chdir: ~/.btrfs_assistant
+    #      target: install

@@ -1,6 +1,7 @@
 # References
 * base: https://help.ubuntu.com/community/Full_Disk_Encryption_Howto_2019 - I omitted LVM configuration
 * extra explaination: https://mutschler.dev/linux/ubuntu-btrfs-20-04/ 
+* also https://theduckchannel.github.io/post/2021/08/24/install-ubuntu-21.04-with-btrfs-+-snapper-+-grub-btrfs/
 
 
 * my settings that works
@@ -19,4 +20,16 @@ swap UUID=1183b7a4-d61c-4306-b7f6-14e953448446 /dev/urandom swap,cipher=aes-xts-
 /dev/mapper/boot    /boot           btrfs   defaults,subvol=/,ssd,noatime,commit=120,compress=zstd:2     0       0
 UUID=934C-DB66      /boot/efi       vfat    umask=0077      0       1
 /dev/mapper/swap    none            swap    sw              0       0
+tmpfs               /tmp            tmpfs   defaults,noatime,nosuid,nodev,noexec,mode=1777,size=2G 0 0
+```
+* reducing GRUB selection timeout
+```
+sudo vim /etc/default/grub
+# change GRUB_TIMEOUT=X
+# and for btrfs define GRUB_RECORDFAIL_TIMEOUT=X 
+# due to https://askubuntu.com/a/1123295
+
+sudo update-grub
+
+cat /boot/grub/grub.cfg | grep timeout # to check if changes were propagated well
 ```

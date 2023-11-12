@@ -13,6 +13,9 @@
           - vim
           - git
           - gitk
+          - htop
+          - terminator
+          - tree
         state: present
       become: yes
       

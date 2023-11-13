@@ -1,5 +1,5 @@
 ---
-- name: Install Btrfs backup tools - Snapper and Btrfs Assistant
+- name: Install Btrfs backup tools - Snapper
   hosts: localhost
   gather_facts: yes
   become: no
@@ -15,21 +15,21 @@
         name: 
           - snapper
           - snapper-gui
-          - build-essential
+    #       - build-essential
 
-    - name: Fetching grub-brtfs
-      git:
-        repo: https://github.com/Antynea/grub-btrfs.git
-        dest: ~/.grub-btrfs
-        clone: yes
-        update: yes
-        depth: 1
+    # - name: Fetching grub-brtfs
+    #   git:
+    #     repo: https://github.com/Antynea/grub-btrfs.git
+    #     dest: ~/.grub-btrfs
+    #     clone: yes
+    #     update: yes
+    #     depth: 1
 
-    - name: Grub-brtfs make and install
-      become: yes
-      make:
-        chdir: ~/.grub-btrfs
-        target: install
+    # - name: Grub-brtfs make and install
+    #   become: yes
+    #   make:
+    #     chdir: ~/.grub-btrfs
+    #     target: install
 
           # migration-assistant dependencies
           # as per instruction here https://gitlab.com/btrfs-assistant/btrfs-assistant

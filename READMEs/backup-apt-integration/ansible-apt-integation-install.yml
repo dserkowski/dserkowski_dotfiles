@@ -1,0 +1,29 @@
+---
+- name: Install hooks to backup /boot btrfs and copy /boot/
+  hosts: localhost
+  gather_facts: yes
+  become: yes
+  vars:
+    bashrc: "{{ ansible_env.HOME }}/.bashrc"
+
+  tasks:
+    - name: Install backup-boot
+      copy:
+        src: backup-boot.sh
+        dest: /usr/bin/backup-boot.sh
+        backup: no
+        mode: 0755
+
+    - name: Install APT hook - efi-backup
+      copy:
+        src: 60efi-backup
+        dest: /etc/apt/apt.conf.d/60efi-backup
+        backup: no
+        mode: 0644
+
+    - name: Install APT hook - 70snapper-boot
+      copy:
+        src: 70snapper-boot
+        dest: /etc/apt/apt.conf.d/70snapper-boot
+        backup: no
+        mode: 0644

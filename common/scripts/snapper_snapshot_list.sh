@@ -1,0 +1,2 @@
+
+snapper list --all-configs

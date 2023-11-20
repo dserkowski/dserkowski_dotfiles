@@ -15,6 +15,22 @@
         name: 
           - snapper
           - snapper-gui
+
+    - name: enable snapper timer - timeline
+      become: yes
+      systemd:
+        name: snapper-timeline.timer
+        state: started
+        enabled: yes
+
+    - name: enable snapper timer - cleanup
+      become: yes
+      systemd:
+        name: snapper-cleanup.timer
+        state: started
+        enabled: yes
+
+
     #       - build-essential
 
     # - name: Fetching grub-brtfs

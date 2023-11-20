@@ -16,9 +16,44 @@
           - htop
           - terminator
           - tree
+          - pcscd 
+          - mlocate
         state: present
       become: yes
-      
+
+    # required for yubikey app - https://www.reddit.com/r/yubikey/comments/rr12s4/yubico_authenticator_linux_no_accounts/
+    - name: start pcscd # for yubikey
+      become: yes
+      systemd:
+        name: pcscd
+        state: started
+        enabled: yes
+    
+    - name: mlocate - skip undesired directories to be scanned by mlocate
+      become: yes
+      lineinfile:
+        # create: yes
+        backup: true
+        state: present
+        path: /etc/updatedb.conf
+        regexp: '^PRUNENAMES='
+        line: 'PRUNENAMES=".snapshots .config snap .git .bzr .hg .svn Trash Cache cache .cache logs fonts font Frameworks atom .atom apm .apm .ansible .idea libreoffice node_modules .node-gyp .npm ipynb_checkpoints dist-packages site-packages .eggs build help icons modules samples Template Templates template templates snapd locale .pycharm_helpers pycharm_helpers .google-chrome google-chrome __pycache__ pack generated_completions .cargo .git .hg .svn .gpg .npm .gem .cargo .cabal .roswell .wine .PlayOnLinux .local .cache .Trash .mail pictures move scrawl backup .emacs_backup .emacs_undo undo elpa quelpa bundle semanticdb .chronicler build"'
+    
+    - name: mlocate - enable scanning btrfs
+      become: yes
+      lineinfile:
+        # create: yes
+        backup: true
+        state: present
+        path: /etc/updatedb.conf
+        regexp: '^PRUNE_BIND_MOUNTS=='
+        line: 'PRUNE_BIND_MOUNTS="no"'
+
+    - name: mlocate - update db
+      become: yes
+      # shell: 'updatedb' 
+      shell: 'updatedb -v > /tmp/updatedb-scan-output'
+
     - name: Install packages via Snap
       community.general.snap:
         name: "{{ item.name }}"
@@ -31,3 +66,7 @@
           classic: yes
         - name: yubioath-desktop
           classic: no
+
+    - name: restart pcscd for yubikey service
+      become: yes
+      shell: 'snap restart yubioath-desktop.pcscd' 

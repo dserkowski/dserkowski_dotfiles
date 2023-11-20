@@ -1,6 +1,6 @@
 # References
 https://theduckchannel.github.io/post/2021/08/24/install-ubuntu-21.04-with-btrfs-+-snapper-+-grub-btrfs/
-https://mutschler.dev/linux/ubuntu-btrfs-20-04/
+https://mutschler.dev/linux/ubuntu-btrfs-20-04/ (I skipped installation of timeshift as it creates read-write snapshotes)
 
 
 # Howto
@@ -54,11 +54,12 @@ https://mutschler.dev/linux/ubuntu-btrfs-20-04/
     # NUMBER_LIMIT="2"
     # NUMBER_LIMIT_IMPORTANT="1"
 
-    # TIMELINE_LIMIT_HOURLY="5"
-    # TIMELINE_LIMIT_DAILY="7"
-    # TIMELINE_LIMIT_WEEKLY="1"
-    # TIMELINE_LIMIT_MONTHLY="1"
+    # TIMELINE_LIMIT_HOURLY="10"
+    # TIMELINE_LIMIT_DAILY="2"
+    # TIMELINE_LIMIT_WEEKLY="1" - for /home 0
+    # TIMELINE_LIMIT_MONTHLY="1" - for /home 0
     # TIMELINE_LIMIT_YEARLY="0"
+    # docs - https://doc.opensuse.org/documentation/leap/reference/html/book-reference/cha-snapper.html#sec-snapper-clean-up-timeline
     ```
 1. (optional) mount @snapshot
 

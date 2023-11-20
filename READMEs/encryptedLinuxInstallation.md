@@ -3,8 +3,10 @@
 * extra explaination: https://mutschler.dev/linux/ubuntu-btrfs-20-04/ 
 * also https://theduckchannel.github.io/post/2021/08/24/install-ubuntu-21.04-with-btrfs-+-snapper-+-grub-btrfs/
 
-
-* my settings that works
+Notes
+* give /boot partition more space for backups 2-3GB in total
+* give slight more spaces between partition - for easier modifications in the future
+* my crypt fs tab settings:
 
 /etc/crypttab
 ```

@@ -1,5 +1,5 @@
 ---
-- name: Install hooks to backup /boot btrfs and copy /boot/
+- name: Install hooks to create snapshots for /, /home and /boot 
   hosts: localhost
   gather_facts: yes
   become: yes
@@ -7,12 +7,26 @@
     bashrc: "{{ ansible_env.HOME }}/.bashrc"
 
   tasks:
-    - name: Install backup-boot
+    - name: Install backup-boot-efi.sh
       copy:
-        src: backup-boot.sh
-        dest: /usr/bin/backup-boot.sh
+        src: backup-boot-efi.sh
+        dest: /usr/bin/backup-boot-efi.sh
         backup: no
         mode: 0755
+
+    - name: Install snapper-cleanup.sh
+      copy:
+        src: snapper-cleanup.sh
+        dest: /usr/bin/snapper-cleanup.sh
+        backup: no
+        mode: 0755
+
+    - name: Install APT hook - snapper-cleanup
+      copy:
+        src: 50snapper-cleanup
+        dest: /etc/apt/apt.conf.d/50snapper-cleanup
+        backup: no
+        mode: 0644
 
     - name: Install APT hook - efi-backup
       copy:
@@ -21,9 +35,9 @@
         backup: no
         mode: 0644
 
-    - name: Install APT hook - 70snapper-boot
+    - name: Install APT hook - snapper-boot
       copy:
-        src: 70snapper-boot
-        dest: /etc/apt/apt.conf.d/70snapper-boot
+        src: 70snapper-snapshot
+        dest: /etc/apt/apt.conf.d/70snapper-snapshot
         backup: no
         mode: 0644

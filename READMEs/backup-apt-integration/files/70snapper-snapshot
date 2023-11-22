@@ -1,0 +1,7 @@
+
+APT::Update::Pre-Invoke {"snapper -c root create -c timeline --description 'before apt update' && echo '/ snapshot created' >&2"; };
+APT::Update::Pre-Invoke {"snapper -c home create -c timeline --description 'before apt update' && echo '/home snapshot created' >&2"; };
+APT::Update::Pre-Invoke {"snapper -c boot create -c timeline --description 'before apt update' && echo '/boot snapshot created' >&2"; };
+DPkg::Pre-Invoke        {"snapper -c root create -c timeline --description 'before apt changes' && echo '/ snapshot created' >&2"; };
+DPkg::Pre-Invoke        {"snapper -c home create -c timeline --description 'before apt changes' && echo '/home snapshot created' >&2"; };
+DPkg::Pre-Invoke        {"snapper -c boot create -c timeline --description 'before apt changes' && echo '/boot snapshot created' >&2"; };

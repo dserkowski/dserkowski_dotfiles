@@ -1,0 +1,2 @@
+APT::Update::Pre-Invoke {"/usr/bin/snapper-cleanup.sh"; };
+DPkg::Pre-Invoke {"/usr/bin/snapper-cleanup.sh"; };

@@ -1,1 +1,2 @@
-DPkg::Pre-Invoke {"/usr/bin/backup-boot.sh"; };
+APT::Update::Pre-Invoke {"/usr/bin/backup-boot-efi.sh"; };
+DPkg::Pre-Invoke {"/usr/bin/backup-boot-efi.sh"; };

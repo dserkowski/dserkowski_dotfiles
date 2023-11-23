@@ -15,11 +15,19 @@
           - gitk
           - htop
           - terminator
+          - curl
+          - httpie
           - tree
           - pcscd 
           - mlocate
+          # - flatpak
+          # - gnome-software-plugin-flatpak
         state: present
       become: yes
+
+    # - name: install flathub repository
+      # become: yes
+      # shell: 'flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo'
 
     # required for yubikey app - https://www.reddit.com/r/yubikey/comments/rr12s4/yubico_authenticator_linux_no_accounts/
     - name: start pcscd # for yubikey

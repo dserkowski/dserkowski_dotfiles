@@ -1,10 +1,10 @@
 
 set -e
 
-snapper -c root cleanup number
-snapper -c boot cleanup number
-snapper -c home cleanup number
-snapper -c root cleanup timeline
-snapper -c boot cleanup timeline
-snapper -c home cleanup timeline
+sudo snapper -c root cleanup number
+sudo snapper -c boot cleanup number
+sudo snapper -c home cleanup number
+sudo snapper -c root cleanup timeline
+sudo snapper -c boot cleanup timeline
+sudo snapper -c home cleanup timeline
 echo "Snapper cleanup done"  >&2

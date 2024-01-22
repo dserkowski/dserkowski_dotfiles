@@ -61,6 +61,17 @@ alias lf="ls -la | grep $1"
 
 ### apps aliases / functions ###
 alias g="git"
+function gCloneOrUpdate() {
+    if [[ -n "$1"]]; then
+        echo 'ERROR: repo url is not provided'
+        return
+    fi
+    if [[ -n "$2"]]; then
+        echo 'ERROR: repo target is not provided'
+        return
+    fi
+    g -C $2 pull || g clone $1 $2
+}
 
 function runWebApps() {
     bash app_evernote.sh

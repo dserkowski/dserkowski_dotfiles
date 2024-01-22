@@ -282,8 +282,8 @@ exec brave
 exec --no-startup-id bash -ic 'source ~/.bashrc && runWebApps' 
 
 bindsym $mod+c exec terminator -x 'vim ~/.config/i3/config' 
-bindsym --release $alt_l+d exec "sleep 0.05 && ~/scripts/typeDate.sh"
-bindsym --release $alt_l+Shift+d exec "sleep 0.05 && ~/scripts/typeDateTime.sh"
+bindsym --release $alt_l+d exec "sleep 0.05 && typeDate.sh"
+bindsym --release $alt_l+Shift+d exec "sleep 0.05 && typeDateTime.sh"
 
 # found using xprobe command
 for_window [instance="www.evernote.com__client_web" class="Brave-browser"] floating disable

@@ -28,6 +28,14 @@ function editEnv() {
 }
 alias envEdit='editEnv'
 
+### env ###
+PATH=$PATH:$DOTFILES_PATH/common/scripts 
+
+mkdir -p ~/tmp
+MY_TMP=~/tmp
+REPOS=~/repos
+#NODE_PATH="/Users/$USER/node_modules"
+
 ### bash function operations ###
 function copyFunction() {
     if [[ -n "$1"]]; then
@@ -44,15 +52,18 @@ function copyFunction() {
     eval "$NEWNAME_FUNC"
 }
 
-### cd operations ###
+### navigation ###
 alias ..="cd .."
-alias ...="cd ../.."
 alias dotfiles="cd $DOTFILES_PATH"
-alias repos="cd ~/repos"
+alias repos="cd $REPOS"
+alias ll="ls -la"
+alias lf="ls -la | grep $1"
 
 ### apps aliases / functions ###
+alias g="git"
+
 function runWebApps() {
-    bash $DOTFILES_PATH/common/scripts/app_evernote.sh
-    bash $DOTFILES_PATH/common/scripts/app_gmail.sh
-    bash $DOTFILES_PATH/common/scripts/app_messenger.sh
+    bash app_evernote.sh
+    bash app_gmail.sh
+    bash app_messenger.sh
 }

@@ -1,6 +1,6 @@
 
 ### initialization ###
-if [[ -n "$DOTFILES_PATH"]]; then
+if [[ -z "$DOTFILES_PATH" ]]; then
     echo 'ERROR: cannot reload env - DOTFILES_PATH undefined'
     return
 fi
@@ -8,18 +8,18 @@ fi
 if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
     return # when included multiple time, this script will be loaded only once
 fi
-COMMON_BASHRC_INITIALIZED="1"
 
 function reloadEnv() {
     unset COMMON_BASHRC_INITIALIZED
-    if [ -f "~/.zshrc" ]; then
+    if [[ -f ~/.zshrc ]]; then
         source ~/.zshrc
         echo "Env reloaded: ~/.zshrc"
-    elif [ -f "~/.bashrc" ]; then
+    elif [[ -f ~/.bashrc ]]; then
         source ~/.bashrc
         echo "Env reloaded: ~/.bashrc"
+    else
+        echo "ERROR: cannot reload env - missing env dotfiles entrypoint"
     fi
-    echo "ERROR: cannot reload env - missing env dotfiles entrypoint"
 }
 alias envReload='reloadEnv'
 
@@ -38,11 +38,11 @@ REPOS=~/repos
 
 ### bash function operations ###
 function copyFunction() {
-    if [[ -n "$1"]]; then
+    if [[ -z "$1" ]]; then
         echo 'ERROR: old function name is not provided'
         return
     fi
-    if [[ -n "$2"]]; then
+    if [[ -z "$2" ]]; then
         echo 'ERROR: new function name is not provided'
         return
     fi
@@ -50,6 +50,11 @@ function copyFunction() {
     local ORIG_FUNC=$(declare -f $1)
     local NEWNAME_FUNC="$2${ORIG_FUNC#$1}"
     eval "$NEWNAME_FUNC"
+}
+
+function functionExists() {
+    declare -f -F $1 > /dev/null
+    return $?
 }
 
 ### navigation ###
@@ -62,11 +67,11 @@ alias lf="ls -la | grep $1"
 ### apps aliases / functions ###
 alias g="git"
 function gCloneOrUpdate() {
-    if [[ -n "$1"]]; then
+    if [[ -z "$1" ]]; then
         echo 'ERROR: repo url is not provided'
         return
     fi
-    if [[ -n "$2"]]; then
+    if [[ -z "$2" ]]; then
         echo 'ERROR: repo target is not provided'
         return
     fi
@@ -78,3 +83,5 @@ function runWebApps() {
     bash app_gmail.sh
     bash app_messenger.sh
 }
+
+COMMON_BASHRC_INITIALIZED="1"

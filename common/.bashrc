@@ -1,7 +1,7 @@
 
 ### initialization ###
-if [[ -z "$DOTFILES_PATH" ]]; then
-    echo 'ERROR: cannot reload env - DOTFILES_PATH undefined'
+if [[ -z DOTFILES_PATH ]]; then
+    >&2 echo 'ERROR: cannot reload env - DOTFILES_PATH undefined'
     return
 fi
 
@@ -11,15 +11,12 @@ fi
 
 function reloadEnv() {
     unset COMMON_BASHRC_INITIALIZED
-    if [[ -f ~/.zshrc ]]; then
-        source ~/.zshrc
-        echo "Env reloaded: ~/.zshrc"
-    elif [[ -f ~/.bashrc ]]; then
-        source ~/.bashrc
-        echo "Env reloaded: ~/.bashrc"
-    else
-        echo "ERROR: cannot reload env - missing env dotfiles entrypoint"
+    if [[ -z RC_PATH ]]; then
+        >&2 echo "ERROR: cannot reload env - missing env dotfiles entrypoint"
+        return
     fi
+    source $RC_PATH
+    >&2 echo "Env reloaded: $RC_PATH"
 }
 alias envReload='reloadEnv'
 
@@ -29,21 +26,28 @@ function editEnv() {
 alias envEdit='editEnv'
 
 ### env ###
+if [[ -f ~/.zshrc ]]; then
+    RC_PATH=~/.zprofile
+elif [[ -f ~/.bashrc ]]; then
+    RC_PATH=~/.bashrc # bash_profile?
+fi
+
 PATH=$PATH:$DOTFILES_PATH/common/scripts 
 
 mkdir -p ~/tmp
 MY_TMP=~/tmp
 REPOS=~/repos
+
 #NODE_PATH="/Users/$USER/node_modules"
 
 ### bash function operations ###
 function copyFunction() {
     if [[ -z "$1" ]]; then
-        echo 'ERROR: old function name is not provided'
+        >&2 echo 'ERROR: old function name is not provided'
         return
     fi
     if [[ -z "$2" ]]; then
-        echo 'ERROR: new function name is not provided'
+        >&2 echo 'ERROR: new function name is not provided'
         return
     fi
     # https://mharrison.org/post/bashfunctionoverride/
@@ -57,6 +61,28 @@ function functionExists() {
     return $?
 }
 
+function addLineToFileOnce() {
+    if [[ -z "$1" ]]; then
+        >&2 echo 'ERROR: line to add was not provided'
+        return
+    fi
+    if [[ -z "$2" ]]; then
+        >&2 echo 'ERROR: target file path not provided'
+        return
+    fi
+    LINE=$1
+    FILE=$2
+    grep -qF "$LINE" "$FILE"  || echo "$LINE" >> "$FILE"
+}
+
+function addLineToRcOnce() {
+    if [[ -z RC_PATH ]]; then
+        >&2 echo "ERROR: env issue - RC_PATH undetermined"
+        return
+    fi
+    addLineToFileOnce "$1" "$RC_PATH"
+}
+
 ### navigation ###
 alias ..="cd .."
 alias dotfiles="cd $DOTFILES_PATH"
@@ -68,11 +94,11 @@ alias lf="ls -la | grep $1"
 alias g="git"
 function gCloneOrUpdate() {
     if [[ -z "$1" ]]; then
-        echo 'ERROR: repo url is not provided'
+        >&2 echo 'ERROR: repo url is not provided'
         return
     fi
     if [[ -z "$2" ]]; then
-        echo 'ERROR: repo target is not provided'
+        >&2 echo 'ERROR: repo target is not provided'
         return
     fi
     g -C $2 pull || g clone $1 $2

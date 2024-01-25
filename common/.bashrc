@@ -15,7 +15,8 @@ function reloadEnv() {
         >&2 echo "ERROR: cannot reload env - missing env dotfiles entrypoint"
         return
     fi
-    source $RC_PATH
+    #source $RC_PATH
+    exec $SHELL -l
     >&2 echo "Env reloaded: $RC_PATH"
 }
 alias envReload='reloadEnv'
@@ -25,9 +26,14 @@ function editEnv() {
 }
 alias envEdit='editEnv'
 
+
+function editRc() {
+    vim $RC_PATH; reloadEnv
+}
+
 ### env ###
 if [[ -f ~/.zshrc ]]; then
-    RC_PATH=~/.zprofile
+    RC_PATH=~/.zshrc
 elif [[ -f ~/.bashrc ]]; then
     RC_PATH=~/.bashrc # bash_profile?
 fi

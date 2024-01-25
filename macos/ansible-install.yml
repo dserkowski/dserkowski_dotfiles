@@ -1,103 +1,118 @@
 ---
 - name: Install all standard tools
   hosts: localhost
-  gather_facts: yes
+  # gather_facts: yes
   become: no
   # vars:
   #   bashrc: "{{ ansible_env.HOME }}/.bashrc"
 
   tasks:
-    - name: Install required packages
-      community.general.homebrew: # https://docs.ansible.com/ansible/latest/collections/community/general/homebrew_module.html
-        name:
-          - vim # ??
-          - ffmpeg
-          - git
-          - git-gui
-          - git-lfs
-          - gitui   # optional
-          - lazygit # optional
-          - htop
-          - curl
-          - httpie
-          - homebrew/cask/httpie # UI app
-          - homebrew/cask/postman
-          - util-linux
-          - jq
-          - yq
-          - nvm
-          - pyenv
-          - jenv
-          - mvnvm
-          - gradle
-          - postgres
-          - homebrew/cask-versions/temurin11
-          - homebrew/cask-versions/corretto17
-          - homebrew/cask/docker # https://stackoverflow.com/a/40523608
-          - lazydocker
-          #- midnight-commander
-          - bitwarden-cli
-          - homebrew/cask/bitwarden
-          - homebrew/cask/meetingbar
-          - homebrew/cask/brave-browser
-          - homebrew/cask/arc-browser # optional
-          - homebrew/cask/alacritty
-          - homebrew/cask/visual-studio-code
-          - homebrew/cask/intellij-idea # or -ce
-          - homebrew/cask/nikitabobko/tap/aerospace
-          - homebrew/cask/karabiner-elements
-          - homebrew/cask/bluesnooze
-          - homebrew/cask/zoom
-          - homebrew/cask/loom
-          #- homebrew/cask/yubico-yubikey-manager
-          #- homebrew/cask/yubico-authenticator
-          - findutils # e.g gnu locate
-          - bash-completion
-          - docker-completion
-          - docker-compose-completion
-          - docker-machine-completion
-          # minor dev dependecies
-          - the_silver_searcher # code text searcher `ag`
-          - gnu-tar 
-          - go
-          - terminal-notifier
-          - util-linux
-          - zstd
+    # - name: Brew update
+    #   homebrew:
+    #     update_homebrew: true
+    #     upgrade_all: true
 
-        state: present
-        install_options: no-quarantine
-        update_homebrew: true
-        upgrade_all: true
-      # become: yes
+    # - name: Brew cask update
+    #   homebrew_cask:
+    #     update_homebrew: true
+    #     upgrade_all: true
+
+    # - name: Install packages
+    #   homebrew: 
+    #     name:
+    #       - vim 
+    #       - ffmpeg
+    #       - git
+    #       - git-gui
+    #       - git-lfs
+    #       - gitui   # optional
+    #       - lazygit # optional
+    #       - htop
+    #       - curl
+    #       - httpie
+    #       - util-linux
+    #       - jq
+    #       - yq
+    #       - nvm
+    #       - pyenv
+    #       - jenv
+    #       - mvnvm
+    #       - gradle
+    #       - lazydocker
+    #       - bitwarden-cli
+    #       - findutils # e.g gnu locate
+    #       - bash-completion
+    #       - docker-completion
+    #       # minor dev dependecies
+    #       - the_silver_searcher # code text searcher `ag`
+    #       - gnu-tar 
+    #       - go
+    #       - terminal-notifier
+    #       - util-linux
+    #       - zstd
+
+    #     state: present
+    #     # update_homebrew: true
+    #     # upgrade_all: true
+    #   # become: yes
+
+    # - name: Install brew cask packages
+    #   homebrew_cask: 
+    #     name: "{{ item }}"
+    #     state: present
+    #     install_options: no-quarantine
+    #   loop:
+    #     - httpie # UI app
+    #     - postman
+    #     - homebrew/cask-versions/temurin11
+    #     - homebrew/cask-versions/corretto17
+    #     - docker # https://stackoverflow.com/a/40523608
+    #     - bitwarden
+    #     - meetingbar
+    #     - brave-browser
+    #     - arc # optional browser
+    #     - alacritty
+    #     - visual-studio-code
+    #     - intellij-idea # or -ce
+    #     - nikitabobko/tap/aerospace
+    #     - karabiner-elements
+    #     - bluesnooze
+    #     - zoom
+    #     - yubico-yubikey-manager
+    #     - yubico-authenticator
+    #     # minor dev dependecies
+      
+
 
     - name: Install aerospace config
       # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
       ansible.builtin.file:
-        src: aerospace.toml
+        src: "{{ playbook_dir }}/files/aerospace.toml"
         dest: ~/.aerospace.toml
         state: link
 
-    - name: Node configuration
+    - name: Nvm configuration
       block: 
         - name: Create dir 
-          path: ~/.nvm
-          state: directory
+          file:
+            path: ~/.nvm
+            state: directory
         - name: .zshenv setup
           lineinfile:
             state: present
             path: ~/.zshenv
-            line: {{ item }}
+            line: "{{ item }}"
             create: true
           with_items: 
               - 'export NVM_DIR="$HOME/.nvm"'
               - '[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm'
               - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion'
         - name: Install node and set as default
-          shell: source ~/.nvm/nvm.sh && nvm install lts/* --default
+          shell: source ~/.zshenv && source ~/.nvm/nvm.sh && nvm install lts/* --default
         - name: Use the node in the current session
-          shell: source ~/.nvm/nvm.sh && nvm use && node --version
+          shell: source ~/.nvm/nvm.sh && node --version
         - name: Install yarn
-          hell: source ~/.nvm/nvm.sh && nvm use && npm install -g yarn
+          shell: source ~/.nvm/nvm.sh && npm install -g yarn
 
     - name: JEnv configuration
       block:
@@ -105,33 +120,35 @@
           lineinfile:
             state: present
             path: ~/.zshenv
-            line: {{ item }}
+            line: "{{ item }}"
             create: true
           with_items: 
+            #- 'export PATH="$HOMEBREW_PREFIX/opt/jenv/bin:$PATH"'
             - 'export PATH="$HOME/.jenv/bin:$PATH"'
-            - 'eval "$(jenv init -)"'
+            # - 'eval "$(jenv init -)"'
         - name: add JDK11
-          shell: source ~/.zshenv && jenv add $( /usr/libexec/java_home -v 11 ) 
+          shell: exec $SHELL -l && jenv add $( /usr/libexec/java_home -v 11 ) 
         - name: add JDK17
-          shell: source ~/.zshenv && jenv add "$( /usr/libexec/java_home -v 17 )"
+          shell: exec $SHELL -l && jenv add "$( /usr/libexec/java_home -v 17 )"
         - name: set JDK11 as default
-          shell: source ~/.zshenv && jenv global 11
+          shell: exec $SHELL -l && jenv global 11.0
         - name: enable plugins
-          shell: jenv enable-plugin {{ item }}
+          shell: exec $SHELL -l && jenv enable-plugin {{ item }}
           with_items:
             - maven
             - gradle
             - export
-        - name: check default JDK
-          shell: source ~/.zshenv && echo "$JAVA_HOME"
+        - name: .zshrc setup 
+          lineinfile:
+            state: present
+            path: ~/.zshrc
+            line: "{{ item }}"
+            create: true
+          with_items: 
+            - 'eval "$(jenv init -)"'
+            - 'eval "$(jenv enable-plugin export)"'
         - name: jenv doctor
           shell: exec $SHELL -l && jenv doctor # verifying if all is ok
-        #- name: jenv fix (add set JAVA_HOME)
-        #  lineinfile:
-        #    state: present
-        #    path: ~/.zshenv
-        #    line: export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
-        #    create: true
           
     - name: configure findutils
       lineinfile:

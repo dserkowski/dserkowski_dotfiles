@@ -28,6 +28,7 @@ brew install ansible
 #pip install --user ansible
 #pip install --user pip-review # pip update 
 
-ansible-playbook -K ansible-install.yml --flush-cache
+ansible-playbook ansible-install.yml
+# ansible-playbook ansible-install.yml --flush-cache -vvv
 
 ./update.sh

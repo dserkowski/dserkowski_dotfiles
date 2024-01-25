@@ -39,13 +39,11 @@ elif [[ -f ~/.bashrc ]]; then
     RC_PATH=~/.bashrc # bash_profile?
 fi
 
-PATH=$PATH:$DOTFILES_PATH/common/scripts 
+PATH=$DOTFILES_PATH/common/scripts:$PATH
 
 mkdir -p ~/tmp
 MY_TMP=~/tmp
 REPOS=~/repos
-
-#NODE_PATH="/Users/$USER/node_modules"
 
 ### bash function/alias operations ###
 function copyFunction() {

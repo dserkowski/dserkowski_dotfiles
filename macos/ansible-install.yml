@@ -212,6 +212,9 @@
     # vim customizations
     # fix docker completions - https://stackoverflow.com/a/39884422
 
+    # fzf - [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    # [ -z "$ZSH_NAME" ] && [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 
     # - name: mlocate - skip undesired directories to be scanned by mlocate
     #   lineinfile:

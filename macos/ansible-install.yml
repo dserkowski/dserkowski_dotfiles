@@ -105,11 +105,11 @@
               - alias nvm='unalias nvm; [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"; nvm $@'
               - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"'
         - name: Install node and set as default
-          shell: source ~/.zshenv && source ~/.nvm/nvm.sh && nvm install lts/* --default
+          shell: exec $SHELL -l && nvm install lts/* --default
         - name: Use the node in the current session
-          shell: source ~/.nvm/nvm.sh && node --version
+          shell: exec $SHELL -l && node --version
         - name: Install yarn
-          shell: source ~/.nvm/nvm.sh && npm install -g yarn
+          shell: exec $SHELL -l && npm install -g yarn && yarn --version
 
     - name: JEnv configuration
       block:

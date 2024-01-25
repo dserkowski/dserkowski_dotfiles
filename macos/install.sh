@@ -1,10 +1,10 @@
 #!/bin/bash
-set -xeu
+set -xe
 
-# if [[ -z COMMON_BASHRC_INITIALIZED ]]; then
-#     >&2 echo 'ERROR: common bashrc is not loaded'
-#     exit 1
-# fi
+if [[ -z "$COMMON_BASHRC_INITIALIZED" ]]; then
+    >&2 echo 'ERROR: common bashrc is not loaded'
+    exit 1
+fi
 
 # if [[ ! -e "$HOME/.aerospace.toml" ]]; then
 #     ln -s -v $DOTFILES_PATH/macos/aerospace.toml $HOME/.aerospace.toml

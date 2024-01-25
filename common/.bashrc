@@ -63,6 +63,10 @@ function copyFunction() {
 }
 
 function commandExists() {
+    if [[ -z "$1" ]]; then
+        >&2 echo 'ERROR: command name is not provided'
+        return
+    fi
     which "$1" > /dev/null
     return $?
 }
@@ -125,4 +129,4 @@ function runWebApps() {
     bash app_messenger.sh
 }
 
-COMMON_BASHRC_INITIALIZED="1"
+export COMMON_BASHRC_INITIALIZED="1"

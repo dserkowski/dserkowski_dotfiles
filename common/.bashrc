@@ -91,7 +91,7 @@ function addLineToFileOnce() {
     fi
     LINE=$1
     FILE=$2
-    grep -qF "$LINE" "$FILE"  || echo "$LINE" >> "$FILE"
+    grep -qF "$LINE" "$FILE"  || echo "\n$LINE" >> "$FILE"
 }
 
 function addLineToRcOnce() {

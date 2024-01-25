@@ -1,0 +1,187 @@
+---
+- name: Install all standard tools
+  hosts: localhost
+  gather_facts: yes
+  become: no
+  # vars:
+  #   bashrc: "{{ ansible_env.HOME }}/.bashrc"
+
+  tasks:
+    - name: Install required packages
+      community.general.homebrew: # https://docs.ansible.com/ansible/latest/collections/community/general/homebrew_module.html
+        name:
+          - vim # ??
+          - ffmpeg
+          - git
+          - git-gui
+          - git-lfs
+          - gitui   # optional
+          - lazygit # optional
+          - htop
+          - curl
+          - httpie
+          - homebrew/cask/httpie # UI app
+          - homebrew/cask/postman
+          - util-linux
+          - jq
+          - yq
+          - nvm
+          - pyenv
+          - jenv
+          - mvnvm
+          - gradle
+          - postgres
+          - homebrew/cask-versions/temurin11
+          - homebrew/cask-versions/corretto17
+          - homebrew/cask/docker # https://stackoverflow.com/a/40523608
+          - lazydocker
+          #- midnight-commander
+          - bitwarden-cli
+          - homebrew/cask/bitwarden
+          - homebrew/cask/meetingbar
+          - homebrew/cask/brave-browser
+          - homebrew/cask/arc-browser # optional
+          - homebrew/cask/alacritty
+          - homebrew/cask/visual-studio-code
+          - homebrew/cask/intellij-idea # or -ce
+          - homebrew/cask/nikitabobko/tap/aerospace
+          - homebrew/cask/karabiner-elements
+          - homebrew/cask/bluesnooze
+          - homebrew/cask/zoom
+          - homebrew/cask/loom
+          #- homebrew/cask/yubico-yubikey-manager
+          #- homebrew/cask/yubico-authenticator
+          - findutils # e.g gnu locate
+          - bash-completion
+          - docker-completion
+          - docker-compose-completion
+          - docker-machine-completion
+          # minor dev dependecies
+          - the_silver_searcher # code text searcher `ag`
+          - gnu-tar 
+          - go
+          - terminal-notifier
+          - util-linux
+          - zstd
+
+        state: present
+        install_options: no-quarantine
+        update_homebrew: true
+        upgrade_all: true
+      # become: yes
+
+    - name: Install aerospace config
+      # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
+      ansible.builtin.file:
+        src: aerospace.toml
+        dest: ~/.aerospace.toml
+        state: link
+
+    - name: Node configuration
+      block: 
+        - name: Create dir 
+          path: ~/.nvm
+          state: directory
+        - name: .zshenv setup
+          lineinfile:
+            state: present
+            path: ~/.zshenv
+            line: {{ item }}
+            create: true
+          with_items: 
+              - 'export NVM_DIR="$HOME/.nvm"'
+              - '[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm'
+              - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion'
+        - name: Install node and set as default
+          shell: source ~/.nvm/nvm.sh && nvm install lts/* --default
+        - name: Use the node in the current session
+          shell: source ~/.nvm/nvm.sh && nvm use && node --version
+        - name: Install yarn
+          hell: source ~/.nvm/nvm.sh && nvm use && npm install -g yarn
+
+    - name: JEnv configuration
+      block:
+        - name: .zshenv setup 
+          lineinfile:
+            state: present
+            path: ~/.zshenv
+            line: {{ item }}
+            create: true
+          with_items: 
+            - 'export PATH="$HOME/.jenv/bin:$PATH"'
+            - 'eval "$(jenv init -)"'
+        - name: add JDK11
+          shell: source ~/.zshenv && jenv add $( /usr/libexec/java_home -v 11 ) 
+        - name: add JDK17
+          shell: source ~/.zshenv && jenv add "$( /usr/libexec/java_home -v 17 )"
+        - name: set JDK11 as default
+          shell: source ~/.zshenv && jenv global 11
+        - name: enable plugins
+          shell: jenv enable-plugin {{ item }}
+          with_items:
+            - maven
+            - gradle
+            - export
+        - name: check default JDK
+          shell: source ~/.zshenv && echo "$JAVA_HOME"
+        - name: jenv doctor
+          shell: exec $SHELL -l && jenv doctor # verifying if all is ok
+        #- name: jenv fix (add set JAVA_HOME)
+        #  lineinfile:
+        #    state: present
+        #    path: ~/.zshenv
+        #    line: export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
+        #    create: true
+          
+    - name: configure findutils
+      lineinfile:
+        state: present
+        path: ~/.zshrc
+        line: PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
+        create: true
+    
+    - name: enable git lfs # in case of issues https://stackoverflow.com/a/76578109
+      shell: git lfs install
+      
+    - name: start Docker 
+      become: no
+      shell: 'open /Applications/Docker.app' 
+
+    - name: start AeroSpace 
+      shell: 'open /Applications/AeroSpace.app' 
+
+    - name: start bluesnooze 
+      shell: 'open /Applications/Bluesnooze.app' # TODO: add it to autostart
+
+
+    # TODO:
+    # pyenv
+    # glocate
+    # disable InteliJ tabs - Library/Application Support/JetBrains/IntelliJIdea2023.3 
+    # bluesnooze - add to autostart
+    # vim customizations
+
+
+    # - name: mlocate - skip undesired directories to be scanned by mlocate
+    #   lineinfile:
+    #     # create: yes
+    #     backup: true
+    #     state: present
+    #     path: /etc/updatedb.conf
+    #     regexp: '^PRUNENAMES='
+    #     line: 'PRUNENAMES=".snapshots .config snap .git .bzr .hg .svn Trash Cache cache .cache logs fonts font Frameworks atom .atom apm .apm .ansible .idea libreoffice node_modules .node-gyp .npm ipynb_checkpoints dist-packages site-packages .eggs build help icons modules samples Template Templates template templates snapd locale .pycharm_helpers pycharm_helpers .google-chrome google-chrome __pycache__ pack generated_completions .cargo .git .hg .svn .gpg .npm .gem .cargo .cabal .roswell .wine .PlayOnLinux .local .cache .Trash .mail pictures move scrawl backup .emacs_backup .emacs_undo undo elpa quelpa bundle semanticdb .chronicler build"'
+    
+    # - name: mlocate - enable scanning btrfs
+    #   become: yes
+    #   lineinfile:
+    #     # create: yes
+    #     backup: true
+    #     state: present
+    #     path: /etc/updatedb.conf
+    #     regexp: '^PRUNE_BIND_MOUNTS=='
+    #     line: 'PRUNE_BIND_MOUNTS="no"'
+
+    # - name: mlocate - update db
+    #   become: yes
+    #   # shell: 'updatedb' 
+    #   shell: 'updatedb -v > /tmp/updatedb-scan-output'

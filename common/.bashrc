@@ -5,10 +5,10 @@ if [[ -z DOTFILES_PATH ]]; then
     return
 fi
 
-if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
-    >&2 echo 'DEBUG: env reload skipped'
-    return # when included multiple time, this script will be loaded only once
-fi
+# if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
+#     >&2 echo 'DEBUG: custom dotfiles reload skipped'
+#     return # when included multiple time, this script will be loaded only once
+# fi
 
 function reloadEnv() {
     unset COMMON_BASHRC_INITIALIZED
@@ -92,7 +92,7 @@ function addLineToFileOnce() {
     fi
     LINE=$1
     FILE=$2
-    grep -qF "$LINE" "$FILE"  || echo "\n$LINE" >> "$FILE"
+    grep -qF "$LINE" "$FILE"  || echo "$LINE" >> "$FILE"
 }
 
 function addLineToRcOnce() {
@@ -104,14 +104,15 @@ function addLineToRcOnce() {
 }
 
 ### navigation ###
-alias ..="cd .."
-alias dotfiles="cd $DOTFILES_PATH"
-alias repos="cd $REPOS"
-alias ll="ls -la"
-alias lf="ls -la | grep $1"
+alias ..='cd ..'
+alias dotfiles='cd $DOTFILES_PATH'
+alias repos='cd $REPOS'
+alias ll='ls -la'
+alias lf='ls -la | grep'
 
 ### apps aliases / functions ###
-alias g="git"
+alias g='git'
+alias gui='gitui'
 function gCloneOrUpdate() {
     if [[ -z "$1" ]]; then
         >&2 echo 'ERROR: repo url is not provided'

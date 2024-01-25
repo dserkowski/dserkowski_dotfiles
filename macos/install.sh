@@ -6,17 +6,8 @@ if [[ -z "$COMMON_BASHRC_INITIALIZED" ]]; then
     exit 1
 fi
 
-# if [[ ! -e "$HOME/.aerospace.toml" ]]; then
-#     ln -s -v $DOTFILES_PATH/macos/aerospace.toml $HOME/.aerospace.toml
-# else
-#     >&2 echo "aerospace config instalation skipped - before instalation remove $HOME/.aerospace.toml"
-# fi
-
 brew install ansible
 
-#brew install --cask alacritty
-#brew install --cask visual-studio-code
-#brew install --cask intellij-idea # or -ce
 
 #brew install pyenv
 #pyenv install --skip-existing 3.12 # version selection https://devguide.python.org/versions/

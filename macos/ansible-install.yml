@@ -137,7 +137,10 @@
           with_items:
             - maven
             - gradle
-            - export
+        - name: disable plugins
+          shell: exec $SHELL -l && jenv disable-plugin {{ item }}
+          with_items:
+            - export # as this is very slow https://github.com/jenv/jenv/issues/178
         - name: .zshrc setup 
           lineinfile:
             state: present
@@ -145,8 +148,10 @@
             line: "{{ item }}"
             create: true
           with_items: 
-            - 'eval "$(jenv init -)"'
-            - 'eval "$(jenv enable-plugin export)"'
+            - eval "$(jenv init -)"
+            # setting JAVA_HOME when refreshing env and when excecuting 'cd'
+            - export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
+            - alias cd=_cdWithJavaHome
         - name: jenv doctor
           shell: exec $SHELL -l && jenv doctor # verifying if all is ok
           
@@ -177,6 +182,7 @@
     # disable InteliJ tabs - Library/Application Support/JetBrains/IntelliJIdea2023.3 
     # bluesnooze - add to autostart
     # vim customizations
+    # fix docker completions - https://stackoverflow.com/a/39884422
 
 
     # - name: mlocate - skip undesired directories to be scanned by mlocate

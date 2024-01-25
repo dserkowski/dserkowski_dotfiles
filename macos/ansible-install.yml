@@ -147,9 +147,10 @@
           with_items: 
             - eval "$(jenv init -)"
             # setting JAVA_HOME when refreshing env and when excecuting 'cd'
-            - export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
-            - unaliasIfExists cd
-            - alias cd=_cdWithSettingJavaHome
+            - setJavaHome
+            - alias cd=cdAndSetJavaHome
+            # - unaliasIfExists cd
+            # - alias cd=_cdWithSettingJavaHome
         - name: jenv doctor
           shell: exec $SHELL -l && jenv doctor # verifying if all is ok
           
@@ -194,7 +195,6 @@
 
       
     - name: start Docker 
-      become: no
       shell: 'open /Applications/Docker.app' 
 
     - name: start AeroSpace 

@@ -6,6 +6,7 @@ if [[ -z DOTFILES_PATH ]]; then
 fi
 
 if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
+    >&2 echo 'DEBUG: env reload skipped'
     return # when included multiple time, this script will be loaded only once
 fi
 
@@ -16,8 +17,8 @@ function reloadEnv() {
         return
     fi
     #source $RC_PATH
-    exec $SHELL -l
     >&2 echo "Env reloaded: $RC_PATH"
+    eval exec $SHELL -l
 }
 alias envReload='reloadEnv'
 

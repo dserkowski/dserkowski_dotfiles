@@ -62,8 +62,13 @@ function copyFunction() {
     eval "$NEWNAME_FUNC"
 }
 
+function commandExists() {
+    which "$1" > /dev/null
+    return $?
+}
+
 function functionExists() {
-    declare -f -F $1 > /dev/null
+    declare -f -F "$1" > /dev/null
     return $?
 }
 

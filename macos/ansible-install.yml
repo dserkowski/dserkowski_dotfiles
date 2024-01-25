@@ -4,80 +4,81 @@
   become: no
 
   tasks:
-    # - name: Brew update
-    #   homebrew:
-    #     update_homebrew: true
-    #     upgrade_all: true
+    - name: Brew update
+      homebrew:
+        update_homebrew: true
+        upgrade_all: true
 
-    # - name: Brew cask update
-    #   homebrew_cask:
-    #     update_homebrew: true
-    #     upgrade_all: true
+    - name: Brew cask update
+      homebrew_cask:
+        update_homebrew: true
+        upgrade_all: true
 
-    # - name: Install packages
-    #   homebrew: 
-    #     name:
-    #       - vim 
-    #       - ffmpeg
-    #       - git
-    #       - git-gui
-    #       - git-lfs
-    #       - gitui   # optional
-    #       - lazygit # optional
-    #       - htop
-    #       - curl
-    #       - httpie
-    #       - util-linux
-    #       - jq
-    #       - yq
-    #       - nvm
-    #       - pyenv
-    #       - jenv
-    #       - mvnvm
-    #       - gradle
-    #       - lazydocker
-    #       - bitwarden-cli
-    #       - findutils # e.g gnu locate
-    #       - bash-completion
-    #       - docker-completion
-    #       # minor dev dependecies
-    #       - the_silver_searcher # code text searcher `ag`
-    #       - gnu-tar 
-    #       - go
-    #       - terminal-notifier
-    #       - util-linux
-    #       - zstd
+    - name: Install packages
+      homebrew: 
+        name:
+          - vim 
+          - ffmpeg
+          - git
+          - git-gui
+          - git-lfs
+          - gitui   # optional
+          - lazygit # optional
+          - htop
+          - curl
+          - httpie
+          - util-linux
+          - jq
+          - yq
+          - nvm
+          - pyenv
+          - jenv
+          - mvnvm
+          - gradle
+          - lazydocker
+          - bitwarden-cli
+          - findutils # e.g gnu locate
+          - bash-completion
+          - docker-completion
+          # minor dev dependecies
+          - the_silver_searcher # code text searcher `ag`
+          - gnu-tar 
+          - go
+          - terminal-notifier
+          - util-linux
+          - zstd
 
-    #     state: present
-    #     # update_homebrew: true
-    #     # upgrade_all: true
-    #   # become: yes
+        state: present
+        # update_homebrew: true
+        # upgrade_all: true
+      # become: yes
 
-    # - name: Install brew cask packages
-    #   homebrew_cask: 
-    #     name: "{{ item }}"
-    #     state: present
-    #     install_options: no-quarantine
-    #   loop:
-    #     - httpie # UI app
-    #     - postman
-    #     - homebrew/cask-versions/temurin11
-    #     - homebrew/cask-versions/corretto17
-    #     - docker # https://stackoverflow.com/a/40523608
-    #     - bitwarden
-    #     - meetingbar
-    #     - brave-browser
-    #     - arc # optional browser
-    #     - alacritty
-    #     - visual-studio-code
-    #     - intellij-idea # or -ce
-    #     - nikitabobko/tap/aerospace
-    #     - karabiner-elements
-    #     - bluesnooze
-    #     - zoom
-    #     - yubico-yubikey-manager
-    #     - yubico-authenticator
-    #     # minor dev dependecies
+    - name: Install brew cask packages
+      homebrew_cask: 
+        name: "{{ item }}"
+        state: present
+        install_options: no-quarantine
+      loop:
+        - rambox
+        - httpie # UI app
+        - postman
+        - homebrew/cask-versions/temurin11
+        - homebrew/cask-versions/corretto17
+        - docker # https://stackoverflow.com/a/40523608
+        - bitwarden
+        - meetingbar
+        - brave-browser
+        - arc # optional browser
+        - alacritty
+        - visual-studio-code
+        - intellij-idea # or -ce
+        - nikitabobko/tap/aerospace
+        - karabiner-elements
+        - bluesnooze
+        - zoom
+        - yubico-yubikey-manager
+        - yubico-authenticator
+        # minor dev dependecies
       
 
 

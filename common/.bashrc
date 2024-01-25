@@ -46,7 +46,7 @@ REPOS=~/repos
 
 #NODE_PATH="/Users/$USER/node_modules"
 
-### bash function operations ###
+### bash function/alias operations ###
 function copyFunction() {
     if [[ -z "$1" ]]; then
         >&2 echo 'ERROR: old function name is not provided'
@@ -65,6 +65,10 @@ function copyFunction() {
 function functionExists() {
     declare -f -F $1 > /dev/null
     return $?
+}
+
+function unaliasIfExists() {
+    unalias "$1" 2>/dev/null
 }
 
 function addLineToFileOnce() {

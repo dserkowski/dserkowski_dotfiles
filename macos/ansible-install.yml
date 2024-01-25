@@ -1,10 +1,7 @@
 ---
 - name: Install all standard tools
   hosts: localhost
-  # gather_facts: yes
   become: no
-  # vars:
-  #   bashrc: "{{ ansible_env.HOME }}/.bashrc"
 
   tasks:
     # - name: Brew update
@@ -104,9 +101,9 @@
             line: "{{ item }}"
             create: true
           with_items: 
-              - 'export NVM_DIR="$HOME/.nvm"'
-              - '[ -s "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" ] && \. "$HOMEBREW_PREFIX/opt/nvm/nvm.sh" # This loads nvm'
-              - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && \. "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" # This loads nvm bash_completion'
+              - export NVM_DIR="$HOME/.nvm"
+              - alias nvm='unalias nvm; [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"; nvm $@'
+              - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"'
         - name: Install node and set as default
           shell: source ~/.zshenv && source ~/.nvm/nvm.sh && nvm install lts/* --default
         - name: Use the node in the current session
@@ -151,7 +148,8 @@
             - eval "$(jenv init -)"
             # setting JAVA_HOME when refreshing env and when excecuting 'cd'
             - export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
-            - alias cd=_cdWithJavaHome
+            - unaliasIfExists cd
+            - alias cd=_cdWithSettingJavaHome
         - name: jenv doctor
           shell: exec $SHELL -l && jenv doctor # verifying if all is ok
           

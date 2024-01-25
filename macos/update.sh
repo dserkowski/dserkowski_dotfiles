@@ -2,7 +2,6 @@
 set -e
 # shopt -s expand_aliases # use aliases in scripts
 source ~/.zshrc
-
 set -x
 
 brew update && brew upgrade && brew cleanup

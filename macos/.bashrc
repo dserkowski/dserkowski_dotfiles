@@ -31,3 +31,5 @@ if commandExists glocate; then
   # **/target **/.git
   alias updatedb='gupdatedb --localpaths="/Users/$USER" --prunepaths="/Volumes /Users/$USER/.nvm /Users/$USER/.cache /Users/$USER/.m2 node_modules" --output=$LOCATE_PATH'
 fi
+
+ls ~/.ssh | grep -q id_ || (commandExists skm && skm use default)

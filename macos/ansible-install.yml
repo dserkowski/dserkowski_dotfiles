@@ -30,7 +30,6 @@
         - htop
         - curl
         - httpie
-        - util-linux
         - jq
         - yq
         - fzf
@@ -103,12 +102,12 @@
     - name: pyenv configuration
       block:
         - name: 'pyenv: install python'
-          shell: pyenv install 3.11
+          shell: pyenv install --skip-existing 3.11
         - name: 'pyenv: set as global'
           shell: pyenv global 3.11
 
-    - name: fzf configuration
-      shell: $(brew --prefix)/opt/fzf/install # inserts 'source ~/.fzf.zsh'
+    # - name: fzf configuration
+    #   shell: $(brew --prefix)/opt/fzf/install # inserts 'source ~/.fzf.zsh'
 
     - name: Nvm configuration
       block: 
@@ -178,12 +177,15 @@
         # - name: jenv doctor
         #   shell: exec $SHELL -l && jenv doctor # verifying if all is ok
           
-    - name: configure findutils
+    - name: configure dev packages / libs
       lineinfile:
         state: present
         path: ~/.zshrc
-        line: PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
+        line: '{{ item }}'
         create: true
+      loop:
+        - PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
+        - PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
     
     - name: enable git lfs # in case of issues https://stackoverflow.com/a/76578109
       shell: git lfs install

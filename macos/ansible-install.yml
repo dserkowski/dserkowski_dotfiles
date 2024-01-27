@@ -15,40 +15,44 @@
         upgrade_all: true
 
     - name: Install packages
+      when: false
       homebrew: 
-        name:
-          - vim 
-          - ffmpeg
-          - git
-          - git-gui
-          - git-lfs
-          - gitui   # optional
-          - lazygit # optional
-          - htop
-          - curl
-          - httpie
-          - util-linux
-          - jq
-          - yq
-          - nvm
-          - pyenv
-          - jenv
-          - mvnvm
-          - gradle
-          - lazydocker
-          - bitwarden-cli
-          - findutils # e.g gnu locate
-          - bash-completion
-          - docker-completion
-          # minor dev dependecies
-          - the_silver_searcher # code text searcher `ag`
-          - gnu-tar 
-          - go
-          - terminal-notifier
-          - util-linux
-          - zstd
-
+        name: '{{ item }}'
         state: present
+      loop:
+        - vim 
+        - ffmpeg
+        - git
+        - git-gui
+        - git-lfs
+        - gitui   # optional
+        - lazygit # optional
+        - htop
+        - curl
+        - httpie
+        - util-linux
+        - jq
+        - yq
+        - nvm
+        - pyenv
+        - jenv
+        - mvnvm
+        - gradle
+        - lazydocker
+        - mas # cli for apple store
+        - bitwarden-cli
+        - findutils # e.g gnu locate
+        - bash-completion
+        - docker-completion
+        # minor dev dependecies
+        - the_silver_searcher # code text searcher `ag`
+        - gnu-tar 
+        - go
+        - terminal-notifier
+        - util-linux
+        - zstd
+        - coreutils
+
         # update_homebrew: true
         # upgrade_all: true
       # become: yes
@@ -58,6 +62,7 @@
         name: "{{ item }}"
         state: present
         install_options: no-quarantine
+      when: false
       loop:
         - rambox
         - httpie # UI app
@@ -65,7 +70,6 @@
         - homebrew/cask-versions/temurin11
         - homebrew/cask-versions/corretto17
         - docker # https://stackoverflow.com/a/40523608
-        - bitwarden
         - meetingbar
         - brave-browser
         - arc # optional browser
@@ -81,6 +85,11 @@
         # minor dev dependecies
       
 
+    - name: Install packages via mas (Mac Apple Store cli)
+      shell: 'source ~/.zshrc && mas install {{ item }}'
+      loop:
+        # if doesn't work - reinstall computer OR go to App Store and try to install manually
+        - 1352778147 # == mac search Bitwarden 
 
     - name: Install aerospace config
       # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
@@ -106,11 +115,11 @@
               - alias nvm='unalias nvm; [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"; nvm $@'
               - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"'
         - name: Install node and set as default
-          shell: exec $SHELL -l && nvm install lts/* --default
+          shell: source ~/.zshrc && nvm install lts/* --default
         - name: Use the node in the current session
-          shell: exec $SHELL -l && node --version
+          shell: source ~/.zshrc && node --version
         - name: Install yarn
-          shell: exec $SHELL -l && npm install -g yarn && yarn --version
+          shell: source ~/.zshrc && npm install -g yarn && yarn --version
 
     - name: JEnv configuration
       block:
@@ -125,18 +134,18 @@
             - 'export PATH="$HOME/.jenv/bin:$PATH"'
             # - 'eval "$(jenv init -)"'
         - name: add JDK11
-          shell: exec $SHELL -l && jenv add $( /usr/libexec/java_home -v 11 ) 
+          shell: source ~/.zshrc && jenv add $( /usr/libexec/java_home -v 11 ) 
         - name: add JDK17
-          shell: exec $SHELL -l && jenv add "$( /usr/libexec/java_home -v 17 )"
+          shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 17 )"
         - name: set JDK11 as default
-          shell: exec $SHELL -l && jenv global 11.0
+          shell: source ~/.zshrc && jenv global 11.0
         - name: enable plugins
-          shell: exec $SHELL -l && jenv enable-plugin {{ item }}
+          shell: source ~/.zshrc && jenv enable-plugin {{ item }}
           with_items:
             - maven
             - gradle
         - name: disable plugins
-          shell: exec $SHELL -l && jenv disable-plugin {{ item }}
+          shell: source ~/.zshrc && jenv disable-plugin {{ item }}
           with_items:
             - export # as this is very slow https://github.com/jenv/jenv/issues/178
         - name: .zshrc setup 
@@ -152,8 +161,10 @@
             - alias cd=cdAndSetJavaHome
             # - unaliasIfExists cd
             # - alias cd=_cdWithSettingJavaHome
-        - name: jenv doctor
-          shell: exec $SHELL -l && jenv doctor # verifying if all is ok
+        - name: check java version
+          shell: source ~/.zshrc && java --version
+        # - name: jenv doctor
+        #   shell: exec $SHELL -l && jenv doctor # verifying if all is ok
           
     - name: configure findutils
       lineinfile:

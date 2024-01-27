@@ -127,7 +127,7 @@
               - alias nvm='unalias nvm; [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"; nvm $@'
               - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"'
         - name: Install node and set as default
-          shell: source ~/.zshrc && nvm install lts/* --default
+          shell: source "$(brew --prefix)/opt/nvm/nvm.sh" && nvm install lts/* --default
         - name: Use the node in the current session
           shell: source ~/.zshrc && node --version
         - name: Install yarn
@@ -151,15 +151,6 @@
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 17 )"
         - name: set JDK11 as default
           shell: source ~/.zshrc && jenv global 11.0
-        - name: enable plugins
-          shell: source ~/.zshrc && jenv enable-plugin {{ item }}
-          with_items:
-            - maven
-            - gradle
-        - name: disable plugins
-          shell: source ~/.zshrc && jenv disable-plugin {{ item }}
-          with_items:
-            - export # as this is very slow https://github.com/jenv/jenv/issues/178
         - name: .zshrc setup 
           lineinfile:
             state: present
@@ -173,8 +164,17 @@
             - alias cd=cdAndSetJavaHome
             # - unaliasIfExists cd
             # - alias cd=_cdWithSettingJavaHome
+        - name: enable plugins
+          shell: source ~/.zshenv && source ~/.zshrc && jenv sh-enable-plugin {{ item }}
+          with_items:
+            - maven
+            - gradle
+        - name: disable plugins
+          shell: source ~/.zshenv && source ~/.zshrc && jenv disable-plugin {{ item }}
+          with_items:
+            - export # as this is very slow https://github.com/jenv/jenv/issues/178
         - name: check java version
-          shell: source ~/.zshrc && java --version
+          shell: source ~/.zshenv && source ~/.zshrc && java --version
         # - name: jenv doctor
         #   shell: exec $SHELL -l && jenv doctor # verifying if all is ok
           

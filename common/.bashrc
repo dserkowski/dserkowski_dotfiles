@@ -41,9 +41,16 @@ fi
 
 PATH=$DOTFILES_PATH/common/scripts:$PATH
 
+# FZF initialization is inserted by fzf install.sh scripts
+# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# [ -z "$ZSH_NAME" ] && [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 mkdir -p ~/tmp
+mkdir -p ~/repos
+mkdir -p ~/libs
 MY_TMP=~/tmp
 REPOS=~/repos
+LIBS=~/libs
 
 ### bash function/alias operations ###
 function copyFunction() {
@@ -120,7 +127,7 @@ function gCloneOrUpdate() {
         >&2 echo 'ERROR: repo target is not provided'
         return
     fi
-    g -C $2 pull || g clone $1 $2
+    g -C "$2" pull || g clone "$1" "$2"
 }
 
 function runWebApps() {

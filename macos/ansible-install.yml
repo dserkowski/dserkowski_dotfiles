@@ -33,6 +33,7 @@
         - util-linux
         - jq
         - yq
+        - fzf
         - nvm
         - pyenv
         - jenv
@@ -82,6 +83,7 @@
         - zoom
         - yubico-yubikey-manager
         - yubico-authenticator
+        - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
       
 
@@ -97,6 +99,16 @@
         src: "{{ playbook_dir }}/files/aerospace.toml"
         dest: ~/.aerospace.toml
         state: link
+
+    - name: pyenv configuration
+      block:
+        - name: 'pyenv: install python'
+          shell: pyenv install 3.11
+        - name: 'pyenv: set as global'
+          shell: pyenv global 3.11
+
+    - name: fzf configuration
+      shell: $(brew --prefix)/opt/fzf/install # inserts 'source ~/.fzf.zsh'
 
     - name: Nvm configuration
       block: 
@@ -211,6 +223,12 @@
 
     - name: start AeroSpace 
       shell: 'open /Applications/AeroSpace.app' 
+
+    - name: start Fig 
+      shell: 'open /Applications/Fig.app' 
+
+    - name: start MeetingBar 
+      shell: 'open /Applications/MeetingBar.app' 
 
     - name: start bluesnooze 
       shell: 'open /Applications/Bluesnooze.app' # TODO: add it to autostart

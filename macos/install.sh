@@ -9,14 +9,7 @@ fi
 brew install ansible
 
 
-#brew install pyenv
-#pyenv install --skip-existing 3.12 # version selection https://devguide.python.org/versions/
-#pyenv global 3.12
-#addLineToRcOnce 'export PYENV_ROOT="$HOME/.pyenv"'
-#addLineToRcOnce '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"'
-#addLineToRcOnce 'eval "$(pyenv init -)"'
-#envReload
-#pip install --user ansible
+
 #pip install --user pip-review # pip update 
 
 ansible-playbook ansible-install.yml

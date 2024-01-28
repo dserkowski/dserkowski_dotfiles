@@ -1,4 +1,7 @@
+#!/bin/bash
+[[ -f ~/.zshrc ]] && source ~/.zshrc || source ~/.bashrc
 
-# mkdir -p /tmp/test
+BROWSER=`isMac && echo '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' || echo 'brave'`
 
-brave --app="https://www.evernote.com/client/web?login=true" --class="web-app"
+$BROWSER --app="https://www.evernote.com/client/web?login=true" --class="web-app"
+

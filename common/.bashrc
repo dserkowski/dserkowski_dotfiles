@@ -39,6 +39,16 @@ elif [[ -f ~/.bashrc ]]; then
     RC_PATH=~/.bashrc # bash_profile?
 fi
 
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     export MACHINE=Linux;;
+    Darwin*)    export MACHINE=Mac;;
+    CYGWIN*)    export MACHINE=Cygwin;;
+    MINGW*)     export MACHINE=MinGw;;
+    MSYS_NT*)   export MACHINE=Git;;
+    *)          export MACHINE="UNKNOWN:${unameOut}"
+esac
+
 PATH=$DOTFILES_PATH/common/scripts:$PATH
 
 # FZF initialization is inserted by fzf install.sh scripts
@@ -74,6 +84,15 @@ function commandExists() {
         return
     fi
     which "$1" > /dev/null
+    return $?
+}
+
+function isMac() {
+    if [[ -z "$MACHINE" ]]; then
+        >&2 echo 'ERROR: $MACHINE unspecified'
+        return
+    fi
+    [[ $MACHINE == "Mac" ]]
     return $?
 }
 
@@ -129,6 +148,8 @@ function gCloneOrUpdate() {
     fi
     g -C "$2" pull || g clone "$1" "$2"
 }
+
+alias orangeCheck='http GET "http://192.168.8.1/api/net/current-plmn" | xq -x //FullName'
 
 function runWebApps() {
     bash app_evernote.sh

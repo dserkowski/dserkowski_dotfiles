@@ -11,7 +11,15 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
-after-startup-command = []
+#runEvernote = 
+after-startup-command = [ '''exec-and-forget 
+        set -e
+        app_evernote.sh
+        sleep 1
+        aerospace move-node-to-workspace R
+''' ]
+#    'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0',
+
 
 # Start AeroSpace at login
 start-at-login = true
@@ -22,7 +30,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#layouts
 # The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
-accordion-padding = 30
+accordion-padding = 40
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -72,7 +80,8 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 # You can uncomment this line to open up terminal with alt + enter shortcut
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#exec-and-forget
 #alt-ctrl-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
-alt-ctrl-shift-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+#alt-ctrl-shift-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+alt-ctrl-shift-enter = 'exec-and-forget open -n /Applications/Alacritty.app'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
 alt-slash = 'layout tiles horizontal vertical'
@@ -175,7 +184,7 @@ alt-shift-z = 'move-node-to-workspace Z'
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-workspace-to-monitor
-alt-shift-tab = 'move-workspace-to-monitor next'
+alt-shift-tab = 'move-workspace-to-monitor next --wrap-around'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
 alt-shift-semicolon = 'mode service'
@@ -213,29 +222,34 @@ esc = 'mode main'
 
 [workspace-to-monitor-force-assignment]
 # implication: you cannot move assigned workspace to different monitor by alt-shift-tab
-1 = 2 # Sequence number of the monitor from left to right. 1-based indexing   
+intellij1 = 2 # Sequence number of the monitor from left to right. 1-based indexing   
+1 = 2
 2 = 2
 3 = 2
 4 = 2
 5 = 2
-Q = 2
-A = 2
-Z = 2
+W = 2
+S = 2
+X = 2
 8 = 2
+9 = 2
 
-W = 1
-S = 1
-X = 1
-9 = 1
+Q = 1
+A = 1
+Z = 1
+7 = 1
 V = 1
 
 E = 3
+R = 3
 D = 3
 C = 3
 0 = 3
 B = 3
 T = 3
 
+
+# aerospace list-apps
 
 #[[on-window-detected]]
 #if.app-id = 'com.jetbrains.intellij'
@@ -247,31 +261,54 @@ run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace W'
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+if.window-title-regex-substring = 'evernote'
+# if.during-aerospace-startup = true 
+# check-further-callbacks = true 
+run = 'move-node-to-workspace R'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace Q'
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
 run = 'move-node-to-workspace Q'
 
 [[on-window-detected]]
 if.app-id = 'net.kovidgoyal.kitty'
-run = 'move-node-to-workspace S'
+run = 'move-node-to-workspace A'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Terminal'
-run = 'move-node-to-workspace S'
+run = 'move-node-to-workspace A'
 
 [[on-window-detected]]
 if.app-id = 'us.zoom.xos'
-run = 'move-node-to-workspace X'
+run = 'move-node-to-workspace Z'
 
 [[on-window-detected]]
-if.app-id = 'com.rambox'
-run = 'move-node-to-workspace E'
-
-[[on-window-detected]]
-if.app-id = 'org.whispersystems.signal-desktop'
+if.app-id = 'com.tinyspeck.slackmacgap'
 run = 'move-node-to-workspace E'
 
 [[on-window-detected]]
 if.app-id = 'com.googlecode.iterm2'
 run = 'move-node-to-workspace D'
+
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+run = ['layout tiling', 'move-node-to-workspace D']
+
+[[on-window-detected]]
+if.app-id = 'com.rambox'
+run = 'move-node-to-workspace C'
+
+[[on-window-detected]]
+if.app-id = 'org.whispersystems.signal-desktop'
+run = 'move-node-to-workspace C'
 
 [[on-window-detected]]
 if.app-id = 'com.bitwarden.desktop'

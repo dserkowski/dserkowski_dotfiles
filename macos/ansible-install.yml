@@ -5,17 +5,23 @@
 
   tasks:
     - name: Brew update
+      tags:
+        - brew
       homebrew:
         update_homebrew: true
         upgrade_all: true
 
     - name: Brew cask update
+      tags:
+        - brew
       homebrew_cask:
         update_homebrew: true
         upgrade_all: true
 
     - name: Install packages
-      when: false
+      # when: false
+      tags:
+        - brew
       homebrew: 
         name: '{{ item }}'
         state: present
@@ -25,6 +31,7 @@
         - git
         - git-gui
         - git-lfs
+        - git-delta # optional
         - gitui   # optional
         - lazygit # optional
         - htop
@@ -32,6 +39,7 @@
         - httpie
         - jq
         - yq
+        - xq
         - fzf
         - nvm
         - pyenv
@@ -53,16 +61,14 @@
         - zstd
         - coreutils
 
-        # update_homebrew: true
-        # upgrade_all: true
-      # become: yes
-
     - name: Install brew cask packages
+      tags:
+        - brew
       homebrew_cask: 
         name: "{{ item }}"
         state: present
         install_options: no-quarantine
-      when: false
+      # when: false
       loop:
         - rambox
         - httpie # UI app
@@ -80,9 +86,11 @@
         - karabiner-elements
         - bluesnooze
         - zoom
+        - signal
+        - flameshot
         - yubico-yubikey-manager
         - yubico-authenticator
-        - fig # https://github.com/withfig/autocomplete
+        # - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
       
 
@@ -226,18 +234,20 @@
     - name: start AeroSpace 
       shell: 'open /Applications/AeroSpace.app' 
 
-    - name: start Fig 
-      shell: 'open /Applications/Fig.app' 
+    # - name: start Fig 
+    #   shell: 'open /Applications/Fig.app' 
 
     - name: start MeetingBar 
       shell: 'open /Applications/MeetingBar.app' 
 
+    - name: start FlameShot 
+      shell: 'open /Applications/Flameshot.app' 
+
     - name: start bluesnooze 
-      shell: 'open /Applications/Bluesnooze.app' # TODO: add it to autostart
+      shell: 'open /Applications/Bluesnooze.app'
 
 
     # TODO:
-    # pyenv
     # glocate
     # disable InteliJ tabs - Library/Application Support/JetBrains/IntelliJIdea2023.3 
     # bluesnooze - add to autostart
@@ -246,28 +256,3 @@
 
     # fzf - [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
     # [ -z "$ZSH_NAME" ] && [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-
-    # - name: mlocate - skip undesired directories to be scanned by mlocate
-    #   lineinfile:
-    #     # create: yes
-    #     backup: true
-    #     state: present
-    #     path: /etc/updatedb.conf
-    #     regexp: '^PRUNENAMES='
-    #     line: 'PRUNENAMES=".snapshots .config snap .git .bzr .hg .svn Trash Cache cache .cache logs fonts font Frameworks atom .atom apm .apm .ansible .idea libreoffice node_modules .node-gyp .npm ipynb_checkpoints dist-packages site-packages .eggs build help icons modules samples Template Templates template templates snapd locale .pycharm_helpers pycharm_helpers .google-chrome google-chrome __pycache__ pack generated_completions .cargo .git .hg .svn .gpg .npm .gem .cargo .cabal .roswell .wine .PlayOnLinux .local .cache .Trash .mail pictures move scrawl backup .emacs_backup .emacs_undo undo elpa quelpa bundle semanticdb .chronicler build"'
-    
-    # - name: mlocate - enable scanning btrfs
-    #   become: yes
-    #   lineinfile:
-    #     # create: yes
-    #     backup: true
-    #     state: present
-    #     path: /etc/updatedb.conf
-    #     regexp: '^PRUNE_BIND_MOUNTS=='
-    #     line: 'PRUNE_BIND_MOUNTS="no"'
-
-    # - name: mlocate - update db
-    #   become: yes
-    #   # shell: 'updatedb' 
-    #   shell: 'updatedb -v > /tmp/updatedb-scan-output'

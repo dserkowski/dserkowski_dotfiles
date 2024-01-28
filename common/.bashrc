@@ -146,10 +146,14 @@ function gCloneOrUpdate() {
         >&2 echo 'ERROR: repo target is not provided'
         return
     fi
-    g -C "$2" pull || g clone "$1" "$2"
+    git -C "$2" pull || git clone "$1" "$2"
 }
 
-alias orangeCheck='http GET "http://192.168.8.1/api/net/current-plmn" | xq -x //FullName'
+alias internetCheck='http GET "http://192.168.8.1/api/net/current-plmn" | xq -x //FullName'
+
+function runEn() {
+    bash app_evernote.sh
+}
 
 function runWebApps() {
     bash app_evernote.sh

@@ -10,7 +10,10 @@ gCloneOrUpdate https://github.com/MartinRamm/fzf-docker.git $LIBS/MartinRamm-fzf
 
 commandExists omz && omz update  
 commandExists nvm && nvm install 'lts/*'
-commandExists mas && mas upgrade
-# softwareupdate --install --recommended --background
+# commandExists mas && mas upgrade # mas doesn't work currently - Apple changed API
+
+sudo softwareupdate --install --recommended --background
+
+
 # pyenv update # TODO
-pip-review --local --auto
+# pip-review --local --auto

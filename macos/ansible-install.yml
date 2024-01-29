@@ -170,7 +170,7 @@
             - eval "$(jenv init -)"
             # setting JAVA_HOME when refreshing env and when excecuting 'cd'
             - setJavaHome
-            - alias cd=cdAndSetJavaHome
+            # - alias cd=cdAndSetJavaHome
             # - unaliasIfExists cd
             # - alias cd=_cdWithSettingJavaHome
         - name: enable plugins

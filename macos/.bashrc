@@ -10,17 +10,61 @@ fi
 
 source $DOTFILES_PATH/common/.bashrc
 
+
+# Dev environment switers: jEnv, pyEnv
+function setJavaHome() { # optimal version of setting JAVA_HOME
+    local OLD_JAVA_HOME="$JAVA_HOME"
+    [[ -d $HOME/.jenv/shims ]] && export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
+    [[ "$OLD_JAVA_HOME" != "$JAVA_HOME" ]] && echo "JAVA_HOME changed to: $JAVA_HOME" >&2 
+}
+function chpwd () { # cd hook - fix for jenv 'export' plugin slowness on MacOs - https://github.com/jenv/jenv/issues/178
+    setJavaHome
+}
+
+function periodic() { # hook
+  # echo "periodic run"
+}
+
+# function cdAndSetJavaHome() { # fix for jenv 'export' plugin slowness on MacOs - https://github.com/jenv/jenv/issues/178
+#     builtin cd "$@"
+#     setJavaHome
+# }
+
+export PYENV_ROOT="$HOME/.pyenv"
+commandExists pyenv && eval "$(pyenv init -)"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+
+
+# [[ -f ~/.fzf.zsh ]] && [[ -f $LIBS/MartinRamm-fzf-docker/docker-fzf ]] && source $LIBS/MartinRamm-fzf-docker/docker-fzf
+export FZF_BASE=$(brew --prefix fzf)
+
+[[ -f /usr/bin/time ]] && alias time='/usr/bin/time -ph $@' # the native one is weird on MacOs
+export PATH="$(brew --prefix findutils)/libexec/gnubin:$PATH"
+export MANPATH="$(brew --prefix findutils)/libexec/gnuman:$MANPATH"
+#alias updatedb="/usr/libexec/locate.updatedb"
+if commandExists glocate; then
+  alias locate=glocate
+  export LOCATE_PATH="$HOME/.locatedb"
+  # --prunenames="target .git node_modules venv .m2"
+  # **/target **/.git
+  alias updatedb='gupdatedb --localpaths="/Users/$USER" --prunepaths="/Volumes /Users/$USER/.nvm /Users/$USER/.cache /Users/$USER/.m2 node_modules" --output=$LOCATE_PATH'
+fi
+
+ls ~/.ssh | grep -q id_ || (commandExists skm && skm use default)
+
+
 # zplug initialization
-if [[ $- == *i* ]]
+if [[ -o interactive ]]
 then # interactive shell
     # interactive mode
     export ZPLUG_HOME=$HOMEBREW_PREFIX/opt/zplug
     source $ZPLUG_HOME/init.zsh
     zplug clear
     # zplug --self-manage
-    zplug "zsh-users/zsh-syntax-highlighting", defer:2
     zplug "zsh-users/zsh-autosuggestions"
     zplug "zsh-users/zsh-completions"
+    zplug "zsh-users/zsh-syntax-highlighting", defer:2
+    # zplug "chriskempson/base16-shell", from:github
     # zplug "paulmelnikow/zsh-startup-timer"
     # zplug "tysonwolker/iterm-tab-colors"
     # zplug "desyncr/auto-ls"
@@ -28,6 +72,17 @@ then # interactive shell
     # zplug "rawkode/zsh-docker-run"
     # zplug "arzzen/calc.plugin.zsh"
     # zplug "peterhurford/up.zsh"
+
+    zplug "plugins/zbell", from:oh-my-zsh # notification after long-running (5s) command completion
+    export zbell_duration=5
+    zplug "plugins/mvn", from:oh-my-zsh # colors
+    zplug "plugins/fzf", from:oh-my-zsh # using fzf for autocompletion and key bindings
+    zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
+    zplug "plugins/zsh-interactive-cd", from:oh-my-zsh # cd with fzf when TAB pressed
+    zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
+    zstyle ':completion:*:*:docker:*' option-stacking yes
+    zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
 
     # zplug "plugins/git", from:oh-my-zsh
     # zplug "plugins/github", from:oh-my-zsh
@@ -47,44 +102,15 @@ then # interactive shell
         if read -q; then
             echo; zplug install
         else
-            echo
+            echo "zplug: Installation skipped"
         fi
     fi
 
+    export ZSH_AUTOSUGGEST_STRATEGY=(history completion) 
+    #export ZSH_AUTOSUGGEST_STRATEGY=(completion history) 
+
     zplug load
     # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    # base16_materia
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
-
-
-# Dev environment switers: jEnv, pyEnv
-function setJavaHome() { # optimal version of setting JAVA_HOME
-    local OLD_JAVA_HOME="$JAVA_HOME"
-    [[ -d $HOME/.jenv/shims ]] && export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
-    [[ "$OLD_JAVA_HOME" != "$JAVA_HOME" ]] && echo "JAVA_HOME changed to: $JAVA_HOME" >&2 
-}
-function cdAndSetJavaHome() { # fix for jenv 'export' plugin slowness on MacOs - https://github.com/jenv/jenv/issues/178
-    builtin cd "$@"
-    setJavaHome
-}
-# alias setJavaHome='_setJavaHome'
-
-export PYENV_ROOT="$HOME/.pyenv"
-commandExists pyenv && eval "$(pyenv init -)"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-
-
-[[ -f /usr/bin/time ]] && alias time='/usr/bin/time -ph $@' # the native one is weird on MacOs
-[[ -f ~/.fzf.zsh ]] && [[ -f $LIBS/MartinRamm-fzf-docker/docker-fzf ]] && source $LIBS/MartinRamm-fzf-docker/docker-fzf
-export PATH="$(brew --prefix findutils)/libexec/gnubin:$PATH"
-export MANPATH="$(brew --prefix findutils)/libexec/gnuman:$MANPATH"
-#alias updatedb="/usr/libexec/locate.updatedb"
-if commandExists glocate; then
-  alias locate=glocate
-  export LOCATE_PATH="$HOME/.locatedb"
-  # --prunenames="target .git node_modules venv .m2"
-  # **/target **/.git
-  alias updatedb='gupdatedb --localpaths="/Users/$USER" --prunepaths="/Volumes /Users/$USER/.nvm /Users/$USER/.cache /Users/$USER/.m2 node_modules" --output=$LOCATE_PATH'
-fi
-
-ls ~/.ssh | grep -q id_ || (commandExists skm && skm use default)

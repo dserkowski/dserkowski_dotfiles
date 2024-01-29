@@ -72,13 +72,16 @@ then
     # zplug "arzzen/calc.plugin.zsh"
     # zplug "peterhurford/up.zsh"
 
-    zplug "plugins/zbell", from:oh-my-zsh # notification after long-running (5s) command completion
-    export zbell_duration=5
+    # zplug "plugins/zbell", from:oh-my-zsh # notification after long-running (5s) command completion
+    zplug "$DOTFILES_PATH/macos/files/zbell", from:local
+    export zbell_duration=10
+
     zplug "plugins/mvn", from:oh-my-zsh # colors
     zplug "plugins/fzf", from:oh-my-zsh # using fzf for autocompletion and key bindings
-    zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
+    zplug "unixorn/fzf-zsh-plugin", depth:1 # using fzf for autocompletion and key bindings
     zplug "plugins/zsh-interactive-cd", from:oh-my-zsh # cd with fzf when TAB pressed
-    zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
+    zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
+    #zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
     zstyle ':completion:*:*:docker:*' option-stacking yes
     zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
@@ -107,7 +110,9 @@ then
 
     export ZSH_AUTOSUGGEST_STRATEGY=(history completion) 
 
+    #zplug load --verbose
     zplug load
+
     # base16_materia
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # To customize prompt, run `p10k configure`
 fi

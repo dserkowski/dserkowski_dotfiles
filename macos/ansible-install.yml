@@ -217,6 +217,16 @@
     - name: enable git lfs # in case of issues https://stackoverflow.com/a/76578109
       shell: git lfs install
 
+    - name: enable git-delta
+      shell: 'git config --global {{ item }}'
+      loop:
+        - core.pager "delta"
+        - interactive.diffFilter "delta --color-only"
+        - delta.navigate "true"
+        - delta.light "false"
+        - merge.conflictstyle "diff3"
+        - diff.colorMoved "default"
+
     - name: Install vs-code extensions
       shell: 'code --install-extension {{ item }}'
       loop:

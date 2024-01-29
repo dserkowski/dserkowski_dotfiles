@@ -1,7 +1,7 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ $- == *i* ]]
+if [[ -o interactive ]]
 then # interactive shell
   if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -74,16 +74,30 @@ then
 
     # zplug "plugins/zbell", from:oh-my-zsh # notification after long-running (5s) command completion
     zplug "$DOTFILES_PATH/macos/files/zbell", from:local
-    export zbell_duration=10
+    export zbell_duration=15 # in seconds
 
+    # temporarly plugins - testing
+    zplug "plugins/colorize", from:oh-my-zsh # colorize
+    
+    
     zplug "plugins/mvn", from:oh-my-zsh # colors
     zplug "plugins/fzf", from:oh-my-zsh # using fzf for autocompletion and key bindings
-    zplug "unixorn/fzf-zsh-plugin", depth:1 # using fzf for autocompletion and key bindings
+    #zplug "unixorn/fzf-zsh-plugin", depth:1 # using fzf for autocompletion and key bindings
+    #alias gb='fzf-git-branch'
+    #alias gco='fzf-git-checkout'
+    
+    #zplug junegunn/fzf, use:'shell/completion.zsh', depth:1 # NOTE: probably a duplicate
+    #zplug sei40kr/zsh-fzf-docker, depth:1
+
     zplug "plugins/zsh-interactive-cd", from:oh-my-zsh # cd with fzf when TAB pressed
-    zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
+    #zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
+    
     #zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
-    zstyle ':completion:*:*:docker:*' option-stacking yes
-    zstyle ':completion:*:*:docker-*:*' option-stacking yes
+    #zstyle ':completion:*:*:docker:*' option-stacking yes
+    #zstyle ':completion:*:*:docker-*:*' option-stacking yes
+
+    zplug "Aloxaf/fzf-tab", depth:1 # fzf after clicking TAB
+
 
 
     # zplug "plugins/git", from:oh-my-zsh

@@ -53,11 +53,10 @@ fi
 ls ~/.ssh | grep -q id_ || (commandExists skm && skm use default)
 
 
+export ZPLUG_HOME=$HOMEBREW_PREFIX/opt/zplug
 # zplug initialization
-if [[ -o interactive ]]
-then # interactive shell
-    # interactive mode
-    export ZPLUG_HOME=$HOMEBREW_PREFIX/opt/zplug
+if [[ -o interactive ]] && [[ -f $ZPLUG_HOME/init.zsh ]]
+then 
     source $ZPLUG_HOME/init.zsh
     zplug clear
     # zplug --self-manage
@@ -107,10 +106,8 @@ then # interactive shell
     fi
 
     export ZSH_AUTOSUGGEST_STRATEGY=(history completion) 
-    #export ZSH_AUTOSUGGEST_STRATEGY=(completion history) 
 
     zplug load
-    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
     # base16_materia
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # To customize prompt, run `p10k configure`
 fi

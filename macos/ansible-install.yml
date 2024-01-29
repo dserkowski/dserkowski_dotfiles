@@ -19,7 +19,7 @@
         upgrade_all: true
 
     - name: Install packages
-      # when: false
+      #when: false
       tags:
         - brew
       homebrew: 
@@ -52,6 +52,7 @@
         - findutils # e.g gnu locate
         - bash-completion
         - docker-completion
+        - zplug
         # minor dev dependecies
         - the_silver_searcher # code text searcher `ag`
         - gnu-tar 
@@ -68,7 +69,7 @@
         name: "{{ item }}"
         state: present
         install_options: no-quarantine
-      # when: false
+      #when: false
       loop:
         - rambox
         - httpie # UI app
@@ -90,6 +91,7 @@
         - flameshot
         - yubico-yubikey-manager
         - yubico-authenticator
+        - homebrew/cask-fonts/font-hack-nerd-font
         # - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
       
@@ -102,7 +104,7 @@
 
     - name: Install aerospace config
       # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html
-      ansible.builtin.file:
+      file:
         src: "{{ playbook_dir }}/files/aerospace.toml"
         dest: ~/.aerospace.toml
         state: link
@@ -184,6 +186,23 @@
           shell: source ~/.zshenv && source ~/.zshrc && java --version
         # - name: jenv doctor
         #   shell: exec $SHELL -l && jenv doctor # verifying if all is ok
+
+    - name: alacritty configuration
+      file:
+        src: "{{ playbook_dir }}/files/alacritty.toml"
+        dest: ~/.alacritty.toml
+        state: link
+
+    - name: powerline10k configuration (terminal theme)
+      file:
+        src: "{{ playbook_dir }}/files/p10k.zsh"
+        dest: ~/.p10k.zsh
+        state: link
+
+    - name: remove 'Last login:' prompt 
+      file:
+        path: ~/.hushlogin
+        state: touch
           
     - name: configure dev packages / libs
       lineinfile:

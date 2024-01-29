@@ -21,9 +21,9 @@ function chpwd () { # cd hook - fix for jenv 'export' plugin slowness on MacOs -
     setJavaHome
 }
 
-function periodic() { # hook
+#function periodic() { # hook
   # echo "periodic run"
-}
+#}
 
 # function cdAndSetJavaHome() { # fix for jenv 'export' plugin slowness on MacOs - https://github.com/jenv/jenv/issues/178
 #     builtin cd "$@"
@@ -63,6 +63,8 @@ then
     zplug "zsh-users/zsh-autosuggestions"
     zplug "zsh-users/zsh-completions"
     zplug "zsh-users/zsh-syntax-highlighting", defer:2
+    ZSH_HIGHLIGHT_HIGHLIGHTERS+=(brackets pattern cursor)
+    
     # zplug "chriskempson/base16-shell", from:github
     # zplug "paulmelnikow/zsh-startup-timer"
     # zplug "tysonwolker/iterm-tab-colors"

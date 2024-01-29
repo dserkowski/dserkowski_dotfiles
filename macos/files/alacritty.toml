@@ -1,2 +1,6 @@
+import = [
+    "~/libs/alacritty-theme/themes/campbell.toml"
+]
+
 [font]
 normal = { family = "Hack Nerd Font", style = "Regular" }

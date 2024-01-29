@@ -23,7 +23,7 @@ function reloadEnv() {
 alias envReload='reloadEnv'
 
 function editEnv() {
-    mc $DOTFILES_PATH; reloadEnv
+    (cd $DOTFILES_PATH && vim common/.bashrc); reloadEnv
 }
 alias envEdit='editEnv'
 
@@ -61,6 +61,7 @@ mkdir -p ~/libs
 MY_TMP=~/tmp
 REPOS=~/repos
 LIBS=~/libs
+export EDITOR=vim 
 
 ### bash function/alias operations ###
 function copyFunction() {
@@ -146,7 +147,7 @@ function gCloneOrUpdate() {
         >&2 echo 'ERROR: repo target is not provided'
         return
     fi
-    git -C "$2" pull || git clone "$1" "$2"
+    git -C "$2" pull --depth 1 || git clone "$1" "$2" --depth 1
 }
 
 alias internetCheck='http GET "http://192.168.8.1/api/net/current-plmn" | xq -x //FullName'

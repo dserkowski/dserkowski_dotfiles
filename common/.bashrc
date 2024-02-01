@@ -5,6 +5,8 @@ if [[ -z DOTFILES_PATH ]]; then
     return
 fi
 
+setopt interactivecomments # copy&paste comments to zsh - https://stackoverflow.com/a/11873793
+
 # if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
 #     >&2 echo 'DEBUG: custom dotfiles reload skipped'
 #     return # when included multiple time, this script will be loaded only once
@@ -134,6 +136,7 @@ alias dotfiles='cd $DOTFILES_PATH'
 alias repos='cd $REPOS'
 alias ll='ls -la'
 alias lf='ls -la | grep'
+alias ls='ls --color=auto'
 
 ### apps aliases / functions ###
 alias g='git'
@@ -150,7 +153,23 @@ function gCloneOrUpdate() {
     git -C "$2" pull --depth 1 || git clone "$1" "$2" --depth 1
 }
 
-alias internetCheck='http GET "http://192.168.8.1/api/net/current-plmn" | xq -x //FullName'
+
+function internetCheck() {
+    echo "===> Internet check:"
+    (ping -i 0.1 -c ${1:-20} -t 1 google.com | grep -q ' 0\.0% packet loss' && echo " OK: ONLINE" || echoRed " WARN: OFFLINE")
+    #ping -c "${1:-4}" google.com 
+
+    # huawei router API - printing internet provider
+    local result=$(http --timeout 1 GET "http://192.168.8.1/api/net/current-plmn" 2> /dev/null | xq -x //FullName)
+    ! [[ "$result" == "Play (Orange)" ]] && echoRed " WARN: $result" || echo " OK: $result"
+    echo "=--="
+}
+
+alias ic='internetCheck 20'
+function periodic() { # experimental
+    internetCheck 5
+}
+
 
 function runEn() {
     bash app_evernote.sh
@@ -160,6 +179,41 @@ function runWebApps() {
     bash app_evernote.sh
     bash app_gmail.sh
     bash app_messenger.sh
+}
+
+COLOR_PREFIX=$(printf '\033')
+COLOR_RED=$COLOR_PREFIX'[31m'
+COLOR_GREEN=$COLOR_PREFIX'[32m'
+COLOR_TURQUOISE=$COLOR_PREFIX'[36m'
+COLOR_YELLOW=$COLOR_PREFIX'[33m'
+COLOR_RESET=$COLOR_PREFIX'[39m'
+
+function echoRed() {
+    echo "$COLOR_RED""$1""$COLOR_RESET"
+}
+
+# function that can be used in a pipe 
+function colorLogs() {
+	# consider lib callend `lnav` log navigator
+	# color schema https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
+	# https://unix.stackexchange.com/a/8419
+	sed -e 's/^\(.*INFO.*\)$/'$COLOR_GREEN'\1'$COLOR_RESET'\n/' \
+        -e 's/^\(.*DEBUG.*\)$/'$COLOR_TURQUOISE'\1'$COLOR_RESET'\n/' \
+        -e 's/^\(.*WARN.*\)$/'$COLOR_YELLOW'\1'$COLOR_RESET'\n/' \
+        -e 's/^\(.*ERROR.*\)$/'$COLOR_RED'\1'$COLOR_RESET'\n/'
+}
+
+function errLogs() {
+    #colorLogs | grep -iv DEBUG | grep -iv INFO
+    colorLogs | grep -iv DEBUG | translateEscapes
+}
+
+function prettyCsv {
+    sed 's/,/ ,/g'| column -t -s, | less -S
+}
+
+function translateEscapes() {
+    xargs -d '\n' -I {} printf '{}\n' | awk NF
 }
 
 export COMMON_BASHRC_INITIALIZED="1"

@@ -1,6 +1,18 @@
 import = [
-    "~/libs/alacritty-theme/themes/campbell.toml"
+    #"~/libs/alacritty-theme/themes/campbell.toml"
+    #"~/libs/alacritty-theme/themes/github_dark_high_contrast.toml"
+    #"~/libs/alacritty-theme/themes/Cobalt2.toml"
+    "~/libs/alacritty-theme/themes/hyper.toml"
 ]
 
 [font]
-normal = { family = "Hack Nerd Font", style = "Regular" }
+size = 12.5
+
+[font.normal]
+# ls ~/Library/Fonts
+family = "MesloLGS NF"
+#family = "Hack Nerd Font"
+
+
+#normal = { family = "Hack Nerd Font", style = "Regular" }
+#family = "Meslo LG M Regular for Powerline"

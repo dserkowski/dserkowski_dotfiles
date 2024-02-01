@@ -56,8 +56,7 @@
         url: https://github.com/voldikss/vim-floaterm
 
     - name: Ensure .vimrc config in place
-      copy:
-        src: vimrc
+      file:
+        src: "{{ playbook_dir }}/files/vimrc"
         dest: "{{ vimrc }}"
-        backup: yes
-        mode: 0640
+        state: link

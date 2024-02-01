@@ -36,6 +36,7 @@
         - lazygit # optional
         - htop
         - curl
+        #- grc # color bash output - but it doesnt work on macos
         - httpie
         - jq
         - yq
@@ -69,7 +70,7 @@
         name: "{{ item }}"
         state: present
         install_options: no-quarantine
-      #when: false
+      when: false
       loop:
         - rambox
         - httpie # UI app
@@ -89,9 +90,11 @@
         - zoom
         - signal
         - flameshot
+        - grammarly-desktop
         - yubico-yubikey-manager
         - yubico-authenticator
-        - homebrew/cask-fonts/font-hack-nerd-font
+        #- homebrew/cask-fonts/font-hack-nerd-font # will be replaced soon 
+        
         # - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
       
@@ -115,6 +118,21 @@
           shell: pyenv install --skip-existing 3.11
         - name: 'pyenv: set as global'
           shell: pyenv global 3.11
+
+    - name: Install fonts for powerline10k
+      get_url:
+        dest: "~/Library/Fonts/{{ item.name }}"
+        url: "{{ item.url }}"
+      loop:
+        - url: https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+          name: MesloLGS NF Regular.ttf
+        - url: https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+          name: MesloLGS NF Bold.ttf
+        - url: https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+          name: MesloLGS NF Italic.ttf
+        - url: https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+          name: MesloLGS NF Bold Italic.ttf
+
 
     # - name: fzf configuration
     #   shell: $(brew --prefix)/opt/fzf/install # inserts 'source ~/.fzf.zsh'

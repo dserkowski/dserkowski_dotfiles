@@ -4,7 +4,9 @@ set -e
 source ~/.zshrc
 set -x
 
-brew update && brew upgrade && brew cleanup
+brew update
+brew upgrade
+brew cleanup
 
 gCloneOrUpdate https://github.com/MartinRamm/fzf-docker.git $LIBS/MartinRamm-fzf-docker
 gCloneOrUpdate https://github.com/alacritty/alacritty-theme $LIBS/alacritty-theme

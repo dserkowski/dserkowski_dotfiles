@@ -57,6 +57,7 @@ export ZPLUG_HOME=$HOMEBREW_PREFIX/opt/zplug
 # zplug initialization
 if [[ -o interactive ]] && [[ -f $ZPLUG_HOME/init.zsh ]]
 then 
+
     source $ZPLUG_HOME/init.zsh
     zplug clear
     # zplug --self-manage
@@ -79,22 +80,21 @@ then
     export zbell_duration=15 # in seconds
 
     # temporarly plugins - testing
-    zplug "plugins/colorize", from:oh-my-zsh # colorize
-    
-    
-    zplug "plugins/mvn", from:oh-my-zsh # colors
-    zplug "plugins/fzf", from:oh-my-zsh # using fzf for autocompletion and key bindings
-    #zplug "unixorn/fzf-zsh-plugin", depth:1 # using fzf for autocompletion and key bindings
-    #alias gb='fzf-git-branch'
-    #alias gco='fzf-git-checkout'
-    
-    #zplug junegunn/fzf, use:'shell/completion.zsh', depth:1 # NOTE: probably a duplicate
-    #zplug sei40kr/zsh-fzf-docker, depth:1
+    zplug "plugins/colorize", from:oh-my-zsh, depth:1 # colorize
+    zplug "plugins/mvn", from:oh-my-zsh, depth:1 # colors
+    zplug "plugins/fzf", from:oh-my-zsh, depth:1 # using fzf for autocompletion and key bindings
+    zplug "plugins/zsh-interactive-cd", from:oh-my-zsh, depth:1 # cd with fzf when TAB pressed
 
-    zplug "plugins/zsh-interactive-cd", from:oh-my-zsh # cd with fzf when TAB pressed
+    zplug "unixorn/fzf-zsh-plugin", depth:1 # using fzf for autocompletion and key bindings
+    alias gb='fzf-git-branch'
+    alias gco='fzf-git-checkout'
+    
+    # zplug junegunn/fzf, use:'shell/completion.zsh', depth:1 # NOTE: probably a duplicate
+    # zplug sei40kr/zsh-fzf-docker, depth:1
+
     #zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
     
-    #zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
+    zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
     #zstyle ':completion:*:*:docker:*' option-stacking yes
     #zstyle ':completion:*:*:docker-*:*' option-stacking yes
 
@@ -112,23 +112,23 @@ then
     # zplug "plugins/ssh-agent", from:oh-my-zsh
     #zplug "jimeh/zsh-peco-history" #TODO replace by fzf
 
-    zplug romkatv/powerlevel10k, as:theme, depth:1
+    zplug "romkatv/powerlevel10k", as:theme, depth:1
     # zplug "b-ryan/powerline-shell"
 
-    if ! zplug check --verbose; then
-        printf "Install? [y/N]: "
-        if read -q; then
-            echo; zplug install
-        else
-            echo "zplug: Installation skipped"
-        fi
-    fi
+    # if ! zplug check --verbose; then
+    #     printf "Install? [y/N]: "
+    #     if read -q; then
+    #         echo; zplug install
+    #     else
+    #         echo "zplug: Installation skipped"
+    #     fi
+    # fi
 
     export ZSH_AUTOSUGGEST_STRATEGY=(history completion) 
+
 
     #zplug load --verbose
     zplug load
 
-    # base16_materia
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # To customize prompt, run `p10k configure`
 fi

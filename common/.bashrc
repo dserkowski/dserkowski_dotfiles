@@ -5,7 +5,10 @@ if [[ -z DOTFILES_PATH ]]; then
     return
 fi
 
-setopt interactivecomments # copy&paste comments to zsh - https://stackoverflow.com/a/11873793
+if [[ -o interactive ]]
+then # interactive shell
+    setopt interactivecomments # copy&paste scripts with comments to zsh - https://stackoverflow.com/a/11873793
+fi
 
 # if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
 #     >&2 echo 'DEBUG: custom dotfiles reload skipped'
@@ -57,12 +60,13 @@ PATH=$DOTFILES_PATH/common/scripts:$PATH
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # [ -z "$ZSH_NAME" ] && [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-mkdir -p ~/tmp
-mkdir -p ~/repos
-mkdir -p ~/libs
-MY_TMP=~/tmp
-REPOS=~/repos
-LIBS=~/libs
+export MY_TMP=$HOME/tmp
+export REPOS=$HOME/repos
+export LIBS=$HOME/libs
+mkdir -p $MY_TMP
+mkdir -p $REPOS
+mkdir -p $LIBS
+
 export EDITOR=vim 
 
 ### bash function/alias operations ###
@@ -152,17 +156,42 @@ function gCloneOrUpdate() {
     fi
     git -C "$2" pull --depth 1 || git clone "$1" "$2" --depth 1
 }
+function gCloneAndAddAliasIfNeeded() {
+    local repoUrl="$1"
+    local targetDir="$2"
+    local aliasName="$3"
+    if [[ -z "$repoUrl" ]]; then
+        >&2 echo 'ERROR: repo url is not provided'
+        return -1
+    fi
+    if [[ -z "$targetDir" ]]; then
+        >&2 echo 'ERROR: repo target is not provided'
+        return -1
+    fi
+    if [[ -z "$aliasName" ]]; then
+        >&2 echo 'ERROR: alias name is not provided'
+        return -1
+    fi
+
+
+    if [[ ! -d "$targetDir" ]]
+    then 
+        git clone "$repoUrl" "$targetDir"
+        >&2 echo 'SUCCESS: repo cloned'
+    fi
+    addLineToRcOnce "alias $aliasName='cd $targetDir'" 
+}
 
 
 function internetCheck() {
-    echo "===> Internet check:"
-    (ping -i 0.1 -c ${1:-20} -t 1 google.com | grep -q ' 0\.0% packet loss' && echo " OK: ONLINE" || echoRed " WARN: OFFLINE")
+    # echo "===> Internet check:"
+    (ping -i 0.1 -c ${1:-20} -t 1 google.com | grep -q ' 0\.0% packet loss' || echoRed " WARN: you are OFFLINE")
     #ping -c "${1:-4}" google.com 
 
     # huawei router API - printing internet provider
     local result=$(http --timeout 1 GET "http://192.168.8.1/api/net/current-plmn" 2> /dev/null | xq -x //FullName)
-    ! [[ "$result" == "Play (Orange)" ]] && echoRed " WARN: $result" || echo " OK: $result"
-    echo "=--="
+    [[ "$result" == "Play (Orange)" || -z "$result" ]] || echoRed " WARN: internet provider set to $result"
+    # echo "=--="
 }
 
 alias ic='internetCheck 20'
@@ -181,12 +210,12 @@ function runWebApps() {
     bash app_messenger.sh
 }
 
-COLOR_PREFIX=$(printf '\033')
-COLOR_RED=$COLOR_PREFIX'[31m'
-COLOR_GREEN=$COLOR_PREFIX'[32m'
-COLOR_TURQUOISE=$COLOR_PREFIX'[36m'
-COLOR_YELLOW=$COLOR_PREFIX'[33m'
-COLOR_RESET=$COLOR_PREFIX'[39m'
+export COLOR_PREFIX=$(printf '\033')
+export COLOR_RED=$COLOR_PREFIX'[31m'
+export COLOR_GREEN=$COLOR_PREFIX'[32m'
+export COLOR_TURQUOISE=$COLOR_PREFIX'[36m'
+export COLOR_YELLOW=$COLOR_PREFIX'[33m'
+export COLOR_RESET=$COLOR_PREFIX'[39m'
 
 function echoRed() {
     echo "$COLOR_RED""$1""$COLOR_RESET"
@@ -197,15 +226,23 @@ function colorLogs() {
 	# consider lib callend `lnav` log navigator
 	# color schema https://dev.to/ifenna__/adding-colors-to-bash-scripts-48g4
 	# https://unix.stackexchange.com/a/8419
-	sed -e 's/^\(.*INFO.*\)$/'$COLOR_GREEN'\1'$COLOR_RESET'\n/' \
+	sed -u \
+        -e 's/^\(.*INFO.*\)$/'$COLOR_GREEN'\1'$COLOR_RESET'\n/' \
         -e 's/^\(.*DEBUG.*\)$/'$COLOR_TURQUOISE'\1'$COLOR_RESET'\n/' \
         -e 's/^\(.*WARN.*\)$/'$COLOR_YELLOW'\1'$COLOR_RESET'\n/' \
         -e 's/^\(.*ERROR.*\)$/'$COLOR_RED'\1'$COLOR_RESET'\n/'
+
+    # sed -u \
+    #     -e 's/\(.*INFO.*\)/'$COLOR_GREEN'\1'$COLOR_RESET'/' \
+    #     -e 's/\(.*DEBUG.*\)/'$COLOR_TURQUOISE'\1'$COLOR_RESET'/' \
+    #     -e 's/\(.*WARN.*\)/'$COLOR_YELLOW'\1'$COLOR_RESET'/' \
+    #     -e 's/\(.*ERROR.*\)/'$COLOR_RED'\1'$COLOR_RESET'/'
 }
 
 function errLogs() {
     #colorLogs | grep -iv DEBUG | grep -iv INFO
-    colorLogs | grep -iv DEBUG | translateEscapes
+    # grep -e INFO -e WARN -e ERROR | colorLogs | translateEscapes
+    colorLogs | translateEscapes | grep -v DEBUG
 }
 
 function prettyCsv {

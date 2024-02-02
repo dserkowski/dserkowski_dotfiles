@@ -320,6 +320,11 @@ run = 'move-node-to-workspace T'
 
 [[on-window-detected]]
 if.app-id = 'com.cisco.anyconnect.gui'
+#run = ['layout floating', 'move-node-to-workspace T']
+run = ['move-node-to-workspace T']
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
 run = 'move-node-to-workspace T'
 
 [[on-window-detected]]

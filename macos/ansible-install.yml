@@ -187,7 +187,7 @@
           with_items: 
             - eval "$(jenv init -)"
             # setting JAVA_HOME when refreshing env and when excecuting 'cd'
-            - setJavaHome
+            #- setJavaHome
             # - alias cd=cdAndSetJavaHome
             # - unaliasIfExists cd
             # - alias cd=_cdWithSettingJavaHome

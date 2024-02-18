@@ -83,6 +83,10 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 #alt-ctrl-shift-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 alt-ctrl-shift-enter = 'exec-and-forget open -n /Applications/Alacritty.app'
 
+
+alt-ctrl-shift-d = ['exec-and-forget zsh -ic "typeDate.sh"']
+alt-ctrl-shift-t = ['exec-and-forget zsh -ic "typeDateTime.sh"']
+
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
@@ -250,6 +254,10 @@ T = 3
 
 
 # aerospace list-apps
+
+[[on-window-detected]]
+check-further-callbacks = true
+run = 'layout tiling'
 
 #[[on-window-detected]]
 #if.app-id = 'com.jetbrains.intellij'

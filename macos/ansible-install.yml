@@ -36,6 +36,7 @@
         - lazygit # optional
         - htop
         - curl
+        - tree
         #- grc # color bash output - but it doesnt work on macos
         - httpie
         - jq
@@ -53,9 +54,9 @@
         - findutils # e.g gnu locate
         - bash-completion
         - docker-completion
-        - zplug
+        - zinit
         # minor dev dependecies
-        - the_silver_searcher # code text searcher `ag`
+        #- the_silver_searcher # code text searcher `ag` ----> replaced by ripgrep
         - gnu-tar 
         - go
         - terminal-notifier
@@ -178,14 +179,14 @@
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 17 )"
         - name: set JDK11 as default
           shell: source ~/.zshrc && jenv global 11.0
-        - name: .zshrc setup 
-          lineinfile:
-            state: present
-            path: ~/.zshrc
-            line: "{{ item }}"
-            create: true
-          with_items: 
-            - eval "$(jenv init -)"
+        # - name: .zshrc setup 
+        #   lineinfile:
+        #     state: present
+        #     path: ~/.zshrc
+        #     line: "{{ item }}"
+        #     create: true
+        #   with_items: 
+            #- eval "$(jenv init -)" # done by zinit lazily
             # setting JAVA_HOME when refreshing env and when excecuting 'cd'
             #- setJavaHome
             # - alias cd=cdAndSetJavaHome

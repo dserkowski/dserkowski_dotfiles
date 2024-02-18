@@ -50,8 +50,12 @@ zbell_ui_notify() {
 	if type notify-send > /dev/null; then
 		notify-send -i terminal "Command completed in ${2}s:" $1
     elif type terminal-notifier > /dev/null; then
-        # all sounds are available in /System/Library/Sounds
-        terminal-notifier -title "Command completed in ${2}s" -message "$1" -sound Blow 
+        # see all sounds are available by `ls -l /System/Library/Sounds`
+		#set -x
+		# https://www.gnu.org/software/bash/manual/html_node/Shell-Parameter-Expansion.html
+		command="${${${1/$/}:0:20}:-???}" # max 20 character; ??? as default
+        terminal-notifier -title "Command completed in ${2:-???}s" -message "$command" -sound Tink 
+		#set +x
 	fi
 }
 

@@ -9,4 +9,4 @@ ansible-playbook ansible-install.yml
 ansible-playbook ../optional/ansible-vim-install-customizations.yml
 # ansible-playbook ansible-install.yml --flush-cache -vvv
 
-./update.sh
+#./update.sh

@@ -8,6 +8,7 @@ fi
 if [[ -o interactive ]]
 then # interactive shell
     setopt interactivecomments # copy&paste scripts with comments to zsh - https://stackoverflow.com/a/11873793
+    setopt histignorealldups   # remove duplicates from history - https://unix.stackexchange.com/a/599656
 fi
 
 # if [[ -n "$COMMON_BASHRC_INITIALIZED" ]]; then
@@ -90,7 +91,7 @@ function commandExists() {
         >&2 echo 'ERROR: command name is not provided'
         return
     fi
-    which "$1" > /dev/null
+    type "$1" > /dev/null
     return $?
 }
 
@@ -154,7 +155,7 @@ function gCloneOrUpdate() {
         >&2 echo 'ERROR: repo target is not provided'
         return
     fi
-    git -C "$2" pull --depth 1 || git clone "$1" "$2" --depth 1
+    git -C "$2" pull --depth 1 --allow-unrelated-histories || git clone "$1" "$2" --depth 1
 }
 function gCloneAndAddAliasIfNeeded() {
     local repoUrl="$1"
@@ -221,6 +222,10 @@ function echoRed() {
     echo "$COLOR_RED""$1""$COLOR_RESET"
 }
 
+function dateTime() {
+    echo $(date +'%Y-%m-%d_%H:%M')
+}
+
 # function that can be used in a pipe 
 function colorLogs() {
 	# consider lib callend `lnav` log navigator
@@ -251,6 +256,12 @@ function prettyCsv {
 
 function translateEscapes() {
     xargs -d '\n' -I {} printf '{}\n' | awk NF
+}
+
+function tmpCleanup() { # WIP
+  # https://tecadmin.net/delete-files-older-x-days/
+  find "$MY_TMP" -type f -mtime +60 
+  #find "$MY_TMP" -type f -mtime +60 -delete
 }
 
 export COMMON_BASHRC_INITIALIZED="1"

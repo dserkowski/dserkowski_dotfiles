@@ -5,6 +5,9 @@ import = [
     "~/libs/alacritty-theme/themes/hyper.toml"
 ]
 
+[colors.normal]
+black   = '#333333' # fix - override for displaying black color on black background
+
 [font]
 size = 12.5
 
@@ -16,3 +19,10 @@ family = "MesloLGS NF"
 
 #normal = { family = "Hack Nerd Font", style = "Regular" }
 #family = "Meslo LG M Regular for Powerline"
+
+
+# sourced from alacrity config https://github.com/cherche/dotfiles/blob/ef244ef4e63429b404f171acd4444b9b160cb80f/apps/alacritty.yml
+#[[keyboard.bindings]]
+#chars = "\u0008" # toml unicode escaping https://github.com/toml-lang/toml/issues/657
+#key = "Back"
+#mods = "None"

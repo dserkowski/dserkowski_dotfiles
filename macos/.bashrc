@@ -62,65 +62,6 @@ fi
 ls ~/.ssh | grep -q id_ || (commandExists skm && skm use default)
 
 
-export ZPLUG_HOME=$HOMEBREW_PREFIX/opt/zplug
-# zplug initialization
-if [[ -o interactive ]] && [[ -f $ZPLUG_HOME/init.zsh ]] && false
-then 
-
-    #ZSH_HIGHLIGHT_HIGHLIGHTERS+=(brackets pattern cursor)
-    # export ZSH_AUTOSUGGEST_STRATEGY=(history completion) 
-    
-    # zplug "chriskempson/base16-shell", from:github
-    # zplug "paulmelnikow/zsh-startup-timer"
-    # zplug "tysonwolker/iterm-tab-colors"
-    # zplug "momo-lab/zsh-abbrev-alias"
-    # zplug "rawkode/zsh-docker-run"
-    # zplug "arzzen/calc.plugin.zsh"
-    # zplug "peterhurford/up.zsh"
-
-    #export zbell_duration=15 # in seconds
-
-    # temporarly plugins - testing
-    zplug "plugins/colorize", from:oh-my-zsh, depth:1 # colorize
-    zplug "plugins/mvn", from:oh-my-zsh, depth:1 # colors
-    zplug "plugins/fzf", from:oh-my-zsh, depth:1 # using fzf for autocompletion and key bindings
-    zplug "plugins/zsh-interactive-cd", from:oh-my-zsh, depth:1 # cd with fzf when TAB pressed
-
-    zplug "unixorn/fzf-zsh-plugin", depth:1 # using fzf for autocompletion and key bindings
-    alias gb='fzf-git-branch'
-    alias gco='fzf-git-checkout'
-    
-    # zplug junegunn/fzf, use:'shell/completion.zsh', depth:1 # NOTE: probably a duplicate
-    # zplug sei40kr/zsh-fzf-docker, depth:1
-
-    #zplug "plugins/zsh_reload", from:oh-my-zsh # `src` command which reload env
-    
-    zplug "plugins/docker", from:oh-my-zsh # TAB autocompletion and aliases 
-    #zstyle ':completion:*:*:docker:*' option-stacking yes
-    #zstyle ':completion:*:*:docker-*:*' option-stacking yes
-
-    zplug "Aloxaf/fzf-tab", depth:1 # fzf after clicking TAB
-
-
-
-    # zplug "plugins/git", from:oh-my-zsh
-    # zplug "plugins/github", from:oh-my-zsh
-    # zplug "plugins/heroku", from:oh-my-zsh
-    # zplug "plugins/lein", from:oh-my-zsh
-    # zplug "plugins/command-not-found", from:oh-my-zsh
-    # zplug "plugins/autojump", from:oh-my-zsh
-    # zplug "plugins/compleat", from:oh-my-zsh
-    # zplug "plugins/ssh-agent", from:oh-my-zsh
-    #zplug "jimeh/zsh-peco-history" #TODO replace by fzf
-
-    # zplug "b-ryan/powerline-shell"
-
-    
-
-
-    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # To customize prompt, run `p10k configure`
-fi
-
 if [[ -o interactive ]] && [[ -f $HOMEBREW_PREFIX/opt/zinit/zinit.zsh ]]
 then 
   source $HOMEBREW_PREFIX/opt/zinit/zinit.zsh
@@ -336,10 +277,14 @@ then
   # zinit delete --clean # cleanup installed plugins/snippets that are uninitialized
 
 
-  ### Deprecated zinit
-  ## welcome screen for terminal
-  #zinit ice atload'zsh-startify'
-  #zinit load zdharma-continuum/zsh-startify
+  # load zsh-completion (extra completions) and reload ALL completion in background (after 3s of zinit initialization)
+  # note: it would be best to make sure that this will be loaded as a last plugin
+  zinit for \
+    atload"zicompinit; zicdreplay" \
+    blockf \
+    lucid \
+    wait"3" \
+    zsh-users/zsh-completions
 fi
 
 

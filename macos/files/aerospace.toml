@@ -237,6 +237,7 @@ S = 2
 X = 2
 8 = 2
 9 = 2
+G = 2
 
 Q = 1
 A = 1
@@ -254,10 +255,6 @@ T = 3
 
 
 # aerospace list-apps
-
-[[on-window-detected]]
-check-further-callbacks = true
-run = 'layout tiling'
 
 #[[on-window-detected]]
 #if.app-id = 'com.jetbrains.intellij'
@@ -346,3 +343,7 @@ run = 'move-node-to-workspace T'
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
 run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+check-further-callbacks = true
+run = 'layout tiling'

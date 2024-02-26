@@ -24,13 +24,14 @@ after-startup-command = [ '''exec-and-forget
 # Start AeroSpace at login
 start-at-login = true
 
-# Normalizations. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#layouts
-# The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
-accordion-padding = 40
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
+accordion-padding = 30
 
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
@@ -40,25 +41,25 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
-# Available since: 0.6.0-Beta
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# Possible values:
+# - Constant:     gaps.outer.top = 8
+# - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#                 In this example, 24 is a default value when there is no match.
+#                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors
 gaps.inner.horizontal = 0
 gaps.inner.vertical =   0
-gaps.outer.left =       1
-gaps.outer.bottom =     1
-gaps.outer.top =        1
-gaps.outer.right =      1
+gaps.outer.left =       0
+gaps.outer.bottom =     0
+gaps.outer.top =        0
+gaps.outer.right =      0
 
 # Visual indent makes it easier to understand that containers of the same orientation are nested.
-# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then there is no way to
-# observe the indent
+# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then
+# there is no way to observe the indent
 indent-for-nested-containers-with-the-same-orientation = 30
 
-# Layout of root containers of non-empty workspaces. The layout is applied only on startup
-# Possible values: smart|tiles|accordion
-# - 'tiles' and 'accordion' are self-describing
-# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
-#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
-non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
 # 'main' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
@@ -87,7 +88,7 @@ alt-ctrl-shift-enter = 'exec-and-forget open -n /Applications/Alacritty.app'
 alt-ctrl-shift-d = ['exec-and-forget zsh -ic "typeDate.sh"']
 alt-ctrl-shift-t = ['exec-and-forget zsh -ic "typeDateTime.sh"']
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
@@ -195,21 +196,23 @@ alt-shift-semicolon = 'mode service'
 alt-shift-slash = 'mode join'
 alt-r = 'mode resize'
 
-# 'service' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'service' binding mode declaration.
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
-esc = 'mode main'
+esc = ['reload-config', 'mode main']
 
-# 'join' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'join' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 [mode.join.binding]
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
-esc = ['reload-config', 'mode main']
+esc = 'mode main'
 
 [mode.resize.binding]
 #h = 'resize width -50'

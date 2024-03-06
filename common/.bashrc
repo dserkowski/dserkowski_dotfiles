@@ -155,7 +155,7 @@ function gCloneOrUpdate() {
         >&2 echo 'ERROR: repo target is not provided'
         return
     fi
-    git -C "$2" pull --depth 1 --allow-unrelated-histories || git clone "$1" "$2" --depth 1
+    ( cd "$2" && git add . && git stash push -m "gCloneOrUpdate" && git -C "$2" fetch --depth 1 origin master && git checkout origin/master) || git clone "$1" "$2" --depth 1
 }
 function gCloneAndAddAliasIfNeeded() {
     local repoUrl="$1"
@@ -223,7 +223,7 @@ function echoRed() {
 }
 
 function dateTime() {
-    echo $(date +'%Y-%m-%d_%H:%M')
+    echo $(date +'%Y-%m-%d_%H_%M')
 }
 
 # function that can be used in a pipe 

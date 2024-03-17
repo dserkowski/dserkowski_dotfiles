@@ -184,22 +184,55 @@ function gCloneAndAddAliasIfNeeded() {
 }
 
 
-function internetCheck() {
+function _internetCheck() {
     # echo "===> Internet check:"
-    (ping -i 0.1 -c ${1:-20} -t 1 google.com | grep -q ' 0\.0% packet loss' || echoRed " WARN: you are OFFLINE")
+    (ping -i 0.1 -c ${1:-20} -t 1 8.8.8.8 | grep -q ' 0\.0% packet loss' || echoRed " WARN: DNS error")
+    (ping -i 0.1 -c ${1:-20} -t 1.5 google.com | grep -q ' 0\.0% packet loss' || echoRed " WARN: google.com ping error")
     #ping -c "${1:-4}" google.com 
+
+
+    #ipv6 - 
+    #(ping6 -i 0.1 -c ${1:-20} -t 1 2001:4860:4860::8888 | grep -q ' 0\.0% packet loss' || echoRed " WARN: ipv6 DNS error")
+    #ping -6 -i 0.1 -c ${1:-20} -t 1 2001:4860:4860::8888 
+
+    (nc -zvw1 google.com 80 2> /dev/null || echoRed " WARN: google:80 connection error")
+    (nc -zvw1 google.com 443 2> /dev/null || echoRed " WARN: goole:443 connection error")
+    (nc -zvw1 bitbucket.com 443 2> /dev/null || echoRed " WARN: bitbucket:443 connection error")
+    (nc -zvw1 github.com 443 2> /dev/null || echoRed " WARN: github:443 connection error")
+    #nc -zvw1 bitbucket.com 9418
+    #(time nc -zw1 google.com 443)
+
+    echo "Checking internet latency and speed..."
+    (NODE_NO_WARNINGS=1 npx dserkowski/speed-cloudflare-cli | tee /dev/stderr | grep -q ' WARN' && echoRed " WARN: internet stats error")
 
     # huawei router API - printing internet provider
     local result=$(http --timeout 1 GET "http://192.168.8.1/api/net/current-plmn" 2> /dev/null | xq -x //FullName)
-    [[ "$result" == "Play (Orange)" || -z "$result" ]] || echoRed " WARN: internet provider set to $result"
+    if [[ -n "$result" ]] && echo "Checking internet provider..."; then 
+        [[ "$result" == "Play (Orange)" || -z "$result" ]] && echoGreen " OK" || echoRed " WARN: internet provider set to $result"
+    else
+        echoYellow " INFO: using alternative internet source"
+    fi
+
+    echo "Experimental checks:"
+    internetCheck.sh
     # echo "=--="
 }
 
-alias ic='internetCheck 20'
-function periodic() { # experimental
-    internetCheck 5
+function internetCheck() {
+    echoTurquoise "Attempt #1"
+    _internetCheck 50
+    sleep 1
+    echoTurquoise "\nAttempt #2"
+    _internetCheck 50
+    sleep 1
+    echoTurquoise "\nAttempt #3"
+    _internetCheck 50
 }
 
+alias ic='_internetCheck 20'
+#function periodic() { # experimental
+#    _internetCheck 5
+#}
 
 function runEn() {
     bash app_evernote.sh
@@ -222,9 +255,22 @@ function echoRed() {
     echo "$COLOR_RED""$1""$COLOR_RESET"
 }
 
+function echoGreen() {
+    echo "$COLOR_GREEN""$1""$COLOR_RESET"
+}
+
+function echoTurquoise() {
+    echo "$COLOR_TURQUOISE""$1""$COLOR_RESET"
+}
+
+function echoYellow() {
+    echo "$COLOR_YELLOW""$1""$COLOR_RESET"
+}
+
 function dateTime() {
     echo $(date +'%Y-%m-%d_%H_%M')
 }
+alias ts='ts "%Y-%m-%d_%H_%M"'
 
 # function that can be used in a pipe 
 function colorLogs() {

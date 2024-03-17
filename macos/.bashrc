@@ -138,6 +138,13 @@ then
         pick"httpstat" as"program"
   zinit snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 
+  # zinit ice mv"check_jitter.py -> check_jitter.py" \
+  #       pick"check_jitter.py" as"program"
+  # zinit ice as"program"
+  # zinit snippet https://github.com/Griesbacher/check_jitter/blob/master/check_jitter.py
+
+
+
   
   ### Dev ENV - Jenv, PyEnv, etc.
   # lazy jenv init (when is used first time)
@@ -298,3 +305,9 @@ fi
 # * review https://github.com/marlonrichert/zsh-launchpad
 # * explore list of extra gtit commnads
 # * really nice list of zinit packages to review https://gist.github.com/abl/d004dcad84a16ddd670f5337ba5b896d
+# * netcheck
+  # git clone https://github.com/TristanBrotherton/netcheck.git
+  # cd netcheck
+  # chmod +x netcheck.sh
+  # ./netcheck.sh
+  # or https://github.com/steinwurf/tcp-test./

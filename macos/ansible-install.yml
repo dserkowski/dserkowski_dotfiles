@@ -49,19 +49,20 @@
         - mvnvm
         - gradle
         - lazydocker
-        - mas # cli for apple store
+        - mas # cli for apple store - deperecated as it doesnt work well
         - findutils # e.g gnu locate
         - bash-completion
         - docker-completion
         - zinit
-        # minor dev dependecies
-        #- the_silver_searcher # code text searcher `ag` ----> replaced by ripgrep
         - gnu-tar 
         - go
         - terminal-notifier
         - util-linux
         - zstd
         - coreutils
+        - moreutils # `| ts` command that adds timestamp
+        - libpq # psql pg_dump
+        - inetutils # gping6
 
     - name: Install brew cask packages
       tags:
@@ -94,8 +95,6 @@
         - grammarly-desktop
         - yubico-yubikey-manager
         - yubico-authenticator
-        #- homebrew/cask-fonts/font-hack-nerd-font # will be replaced soon 
-        
         # - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
       
@@ -233,6 +232,7 @@
       loop:
         - PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
         - PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
+        - PATH="/opt/homebrew/opt/libpq/bin:$PATH
     
     - name: enable git lfs # in case of issues https://stackoverflow.com/a/76578109
       shell: git lfs install

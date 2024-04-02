@@ -36,6 +36,7 @@
         - lazygit # optional
         - htop
         - curl
+        - gnu-sed
         - tree
         #- grc # color bash output - but it doesnt work on macos
         - httpie
@@ -63,6 +64,7 @@
         - moreutils # `| ts` command that adds timestamp
         - libpq # psql pg_dump
         - inetutils # gping6
+        #- gcc # pyenv needs that to complie python during installation
 
     - name: Install brew cask packages
       tags:
@@ -76,6 +78,7 @@
         - rambox
         - httpie # UI app
         - postman
+        - homebrew/cask-versions/temurin8
         - homebrew/cask-versions/temurin11
         - homebrew/cask-versions/corretto17
         - docker # https://stackoverflow.com/a/40523608
@@ -112,13 +115,13 @@
         dest: ~/.aerospace.toml
         state: link
 
-## TODO: to fix
-    - name: pyenv configuration
-      block:
-        - name: 'pyenv: install python'
-          shell: pyenv install --skip-existing 3.11
-        - name: 'pyenv: set as global'
-          shell: pyenv global 3.11
+## TODO: to fix or remove (due to MacOs python compilation issues)
+    # - name: pyenv configuration
+    #   block:
+    #     - name: 'pyenv: install python'
+    #       shell: pyenv install --skip-existing 3.11
+    #     - name: 'pyenv: set as global'
+    #       shell: pyenv global 3.11
 
     - name: Install fonts for powerline10k
       get_url:
@@ -177,6 +180,8 @@
           shell: source ~/.zshrc && jenv add $( /usr/libexec/java_home -v 11 ) 
         - name: add JDK17
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 17 )"
+        - name: add JDK8
+          shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 1.8 )"
         - name: set JDK11 as default
           shell: source ~/.zshrc && jenv global 11.0
         # - name: .zshrc setup 
@@ -232,7 +237,7 @@
       loop:
         - PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
         - PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
-        - PATH="/opt/homebrew/opt/libpq/bin:$PATH
+        - PATH="/opt/homebrew/opt/libpq/bin:$PATH"
     
     - name: enable git lfs # in case of issues https://stackoverflow.com/a/76578109
       shell: git lfs install

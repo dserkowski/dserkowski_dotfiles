@@ -1,1 +1,3 @@
 restricted_*/
+venv
+node_modules

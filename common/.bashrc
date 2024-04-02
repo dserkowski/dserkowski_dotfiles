@@ -64,9 +64,11 @@ PATH=$DOTFILES_PATH/common/scripts:$PATH
 export MY_TMP=$HOME/tmp
 export REPOS=$HOME/repos
 export LIBS=$HOME/libs
+export STANDALONE=$HOME/standalone
 mkdir -p $MY_TMP
 mkdir -p $REPOS
 mkdir -p $LIBS
+mkdir -p $STANDALONE
 
 export EDITOR=vim 
 
@@ -185,33 +187,35 @@ function gCloneAndAddAliasIfNeeded() {
 
 
 function _internetCheck() {
+    # huawei router API - printing internet provider
+    local result=$(http --timeout 1 GET "http://192.168.8.1/api/net/current-plmn" 2> /dev/null | xq -x //FullName)
+    if [[ -n "$result" ]] && echo "Checking internet provider..."; then 
+        [[ "$result" == "Play (Orange)" || -z "$result" ]] && echoGreen " OK (orange)" || echoBoldRed " WARN: internet provider set to $result"
+    else
+        echoYellow " INFO: using alternative internet source"
+    fi
+
     # echo "===> Internet check:"
-    (ping -i 0.1 -c ${1:-20} -t 1 8.8.8.8 | grep -q ' 0\.0% packet loss' || echoRed " WARN: DNS error")
-    (ping -i 0.1 -c ${1:-20} -t 1.5 google.com | grep -q ' 0\.0% packet loss' || echoRed " WARN: google.com ping error")
+    (ping -i 0.1 -t 1 8.8.8.8 | grep -q ' 0\.0% packet loss' && echoGreen " DNS ok" || echoBoldRed " WARN: DNS error")
+    (ping -i 0.2 -t 2 google.com | grep -q ' 0\.0% packet loss' && echoGreen " google.com ping ok" || echoBoldRed " WARN: google.com ping error")
     #ping -c "${1:-4}" google.com 
 
-
     #ipv6 - 
-    #(ping6 -i 0.1 -c ${1:-20} -t 1 2001:4860:4860::8888 | grep -q ' 0\.0% packet loss' || echoRed " WARN: ipv6 DNS error")
+    #(ping6 -i 0.1 -c ${1:-20} -t 1 2001:4860:4860::8888 | grep -q ' 0\.0% packet loss' || echoBoldRed " WARN: ipv6 DNS error")
     #ping -6 -i 0.1 -c ${1:-20} -t 1 2001:4860:4860::8888 
 
-    (nc -zvw1 google.com 80 2> /dev/null || echoRed " WARN: google:80 connection error")
-    (nc -zvw1 google.com 443 2> /dev/null || echoRed " WARN: goole:443 connection error")
-    (nc -zvw1 bitbucket.com 443 2> /dev/null || echoRed " WARN: bitbucket:443 connection error")
-    (nc -zvw1 github.com 443 2> /dev/null || echoRed " WARN: github:443 connection error")
+    (nc -zvw1 borcar.lol 80 2> /dev/null || echoBoldRed " WARN: borcar.lol:80 connection error")  
+    (nc -zvw1 borcar.lol 443 2> /dev/null || echoBoldRed " WARN: borcar.lol:443 connection error")  
+      
+    (nc -zvw1 google.com 80 2> /dev/null || echoBoldRed " WARN: google:80 connection error")
+    (nc -zvw1 google.com 443 2> /dev/null || echoBoldRed " WARN: goole:443 connection error")
+    (nc -zvw1 bitbucket.com 443 2> /dev/null || echoBoldRed " WARN: bitbucket:443 connection error")
+    (nc -zvw1 github.com 443 2> /dev/null || echoBoldRed " WARN: github:443 connection error")
     #nc -zvw1 bitbucket.com 9418
     #(time nc -zw1 google.com 443)
 
     echo "Checking internet latency and speed..."
-    (NODE_NO_WARNINGS=1 npx dserkowski/speed-cloudflare-cli | tee /dev/stderr | grep -q ' WARN' && echoRed " WARN: internet stats error")
-
-    # huawei router API - printing internet provider
-    local result=$(http --timeout 1 GET "http://192.168.8.1/api/net/current-plmn" 2> /dev/null | xq -x //FullName)
-    if [[ -n "$result" ]] && echo "Checking internet provider..."; then 
-        [[ "$result" == "Play (Orange)" || -z "$result" ]] && echoGreen " OK" || echoRed " WARN: internet provider set to $result"
-    else
-        echoYellow " INFO: using alternative internet source"
-    fi
+    (NODE_NO_WARNINGS=1 npx dserkowski/speed-cloudflare-cli | tee /dev/stderr | grep -q ' WARN' && echoBoldRed " WARN: internet stats error")
 
     echo "Experimental checks:"
     internetCheck.sh
@@ -249,10 +253,15 @@ export COLOR_RED=$COLOR_PREFIX'[31m'
 export COLOR_GREEN=$COLOR_PREFIX'[32m'
 export COLOR_TURQUOISE=$COLOR_PREFIX'[36m'
 export COLOR_YELLOW=$COLOR_PREFIX'[33m'
+export COLOR_BOLD=$COLOR_PREFIX'[1m'
 export COLOR_RESET=$COLOR_PREFIX'[39m'
 
 function echoRed() {
     echo "$COLOR_RED""$1""$COLOR_RESET"
+}
+
+function echoBoldRed() {
+    echo "$COLOR_RED""$COLOR_BOLD""$1""$COLOR_RESET""$COLOR_RESET"
 }
 
 function echoGreen() {
@@ -281,7 +290,8 @@ function colorLogs() {
         -e 's/^\(.*INFO.*\)$/'$COLOR_GREEN'\1'$COLOR_RESET'\n/' \
         -e 's/^\(.*DEBUG.*\)$/'$COLOR_TURQUOISE'\1'$COLOR_RESET'\n/' \
         -e 's/^\(.*WARN.*\)$/'$COLOR_YELLOW'\1'$COLOR_RESET'\n/' \
-        -e 's/^\(.*ERROR.*\)$/'$COLOR_RED'\1'$COLOR_RESET'\n/'
+        -e 's/^\(.*ERROR.*\)$/'$COLOR_RED'\1'$COLOR_RESET'\n/' \
+        -e 's/^\(.*SEVERE.*\)$/'$COLOR_RED'\1'$COLOR_RESET'\n/'
 
     # sed -u \
     #     -e 's/\(.*INFO.*\)/'$COLOR_GREEN'\1'$COLOR_RESET'/' \

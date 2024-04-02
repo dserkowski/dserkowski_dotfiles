@@ -21,7 +21,7 @@ fi
 
 # Dev environment switers: jEnv, pyEnv
 function setJavaHome() { # optimal version of setting JAVA_HOME
-    local OLD_JAVA_HOME="$JAVA_HOME"
+    local OLD_JAVA_HOME="${JAVA_HOME-}"
     [[ -d $HOME/.jenv/shims ]] && export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
     [[ "$OLD_JAVA_HOME" != "$JAVA_HOME" ]] && echo "JAVA_HOME changed to: $JAVA_HOME" >&2 
 }

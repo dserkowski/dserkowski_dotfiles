@@ -265,31 +265,44 @@ T = 3
 check-further-callbacks = true
 run = 'layout tiling' # tiles
 
-#[[on-window-detected]]
-#if.app-id = 'com.jetbrains.intellij'
-#run = 'move-node-to-workspace 1'
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.intellij'
+run = 'move-node-to-workspace 1'
 
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+if.app-name-regex-substring = 'dotfiles'
+check-further-callbacks = false # false is default 
+run = 'move-node-to-workspace 5'
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+if.window-title-regex-substring = 'dotfiles'
+check-further-callbacks = false # false is default 
+run = 'move-node-to-workspace 5'
 [[on-window-detected]]
 if.app-id = 'com.microsoft.VSCode'
 run = 'move-node-to-workspace 2'
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace W'
-
+if.app-name-regex-substring = 'evernote'
+check-further-callbacks = false # false is default 
+run = 'move-node-to-workspace R'
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 if.window-title-regex-substring = 'evernote'
-# if.during-aerospace-startup = true 
-# check-further-callbacks = true 
+check-further-callbacks = false # false is default 
 run = 'move-node-to-workspace R'
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace W'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
 run = 'move-node-to-workspace Q'
 
 [[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser'
+if.app-id = 'company.thebrowser.Browser' # Arc browser
 run = 'move-node-to-workspace Q'
 
 [[on-window-detected]]
@@ -314,7 +327,7 @@ run = 'move-node-to-workspace D'
 
 [[on-window-detected]]
 if.app-id = 'org.alacritty'
-run = ['layout tiling', 'move-node-to-workspace D']
+run = 'move-node-to-workspace X'
 
 [[on-window-detected]]
 if.app-id = 'com.rambox'
@@ -351,7 +364,3 @@ run = 'move-node-to-workspace T'
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
 run = 'move-node-to-workspace 8'
-
-#[[on-window-detected]]
-#check-further-callbacks = true
-#run = 'layout tiles'

@@ -38,6 +38,7 @@
         - curl
         - gnu-sed
         - tree
+        - bzip2 # support for .bz2 archives
         #- grc # color bash output - but it doesnt work on macos
         - httpie
         - jq
@@ -98,6 +99,7 @@
         - grammarly-desktop
         - yubico-yubikey-manager
         - yubico-authenticator
+        - monitorcontrol # control brightness on all screens
         # - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
       

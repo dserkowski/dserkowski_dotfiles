@@ -78,7 +78,7 @@
       loop:
         - rambox
         - httpie # UI app
-        - postman
+        #- postman # using httpie UI instead
         - homebrew/cask-versions/temurin8
         - homebrew/cask-versions/temurin11
         - homebrew/cask-versions/corretto17

@@ -146,6 +146,8 @@ alt-ctrl-w = 'workspace W'
 alt-ctrl-x = 'workspace X'
 alt-ctrl-y = 'workspace Y'
 alt-ctrl-z = 'workspace Z'
+alt-ctrl-leftSquareBracket = 'workspace lS'
+alt-ctrl-rightSquareBracket = 'workspace rS'
 
 alt-ctrl-f = 'fullscreen'
 
@@ -182,6 +184,8 @@ alt-shift-w = 'move-node-to-workspace W'
 alt-shift-x = 'move-node-to-workspace X'
 alt-shift-y = 'move-node-to-workspace Y'
 alt-shift-z = 'move-node-to-workspace Z'
+alt-shift-leftSquareBracket = 'move-node-to-workspace lS'
+alt-shift-rightSquareBracket = 'move-node-to-workspace rS'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
@@ -237,13 +241,14 @@ S = 2
 X = 2
 8 = 2
 9 = 2
-G = 2
 
+G = 1
 Q = 1
 A = 1
 Z = 1
 7 = 1
 V = 1
+lS = 1
 
 E = 3
 R = 3
@@ -252,7 +257,7 @@ C = 3
 0 = 3
 B = 3
 T = 3
-
+rS = 3
 
 # aerospace list-apps
 

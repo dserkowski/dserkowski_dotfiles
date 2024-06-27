@@ -74,14 +74,15 @@
         name: "{{ item }}"
         state: present
         install_options: no-quarantine
-      when: false
+      #when: false
       loop:
         - rambox
         - httpie # UI app
         #- postman # using httpie UI instead
-        - homebrew/cask-versions/temurin8
-        - homebrew/cask-versions/temurin11
-        - homebrew/cask-versions/corretto17
+        - temurin@8
+        - temurin@11
+        - corretto@17
+        - corretto@21
         - docker # https://stackoverflow.com/a/40523608
         - meetingbar
         - brave-browser
@@ -162,9 +163,9 @@
         - name: Install node and set as default
           shell: source "$(brew --prefix)/opt/nvm/nvm.sh" && nvm install lts/* --default
         - name: Use the node in the current session
-          shell: source ~/.zshrc && node --version
+          shell: zsh --interactive -c 'nvm --version && node --version'
         - name: Install yarn
-          shell: source ~/.zshrc && npm install -g yarn && yarn --version
+          shell: zsh --interactive -c 'nvm --version && npm install -g yarn && yarn --version'
 
     - name: JEnv configuration
       block:
@@ -184,6 +185,8 @@
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 17 )"
         - name: add JDK8
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 1.8 )"
+        - name: add JDK21
+          shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 21 )"
         - name: set JDK11 as default
           shell: source ~/.zshrc && jenv global 11.0
         # - name: .zshrc setup 

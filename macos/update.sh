@@ -14,7 +14,7 @@ gCloneOrUpdate https://github.com/alacritty/alacritty-theme $LIBS/alacritty-them
 zsh --interactive -c 'commandExists zplug && zplug update' || echo ""
 zsh --interactive -c 'commandExists zinit && zinit self-update && zinit delete --clean --yes && zinit update --all --quiet' || echo ""
 zsh --interactive -c 'commandExists omz && omz update' || echo ""
-zsh --interactive -c 'commandExists nvm && nvm install "lts/*"' || echo ""
+zsh --interactive -c 'commandExists nvm && nvm install "lts/*" && nvm --version' || echo ""
 zsh --interactive -c 'commandExists npm && npm update -g' || echo ""
 
 # commandExists mas && mas upgrade # mas doesn't work currently - Apple changed API

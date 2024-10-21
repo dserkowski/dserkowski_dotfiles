@@ -1,7 +1,12 @@
 #!/bin/bash
 [[ -f ~/.zshrc ]] && source ~/.zshrc || source ~/.bashrc
 
-BROWSER=`isMac && echo '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' || echo 'brave'`
+MAC_OS_BROWSER='open -n /Applications/Google\ Chrome.app --args'
+#MAC_OS_BROWSER='open -n /Applications/Brave\ Browser.app --args'
+#MAC_OS_BROWSER='open -n /Applications/Chromium.app --args'
+LINUX_OS_BROWSER='brave'
 
-"$BROWSER" --app="https://www.evernote.com/client/web?login=true" --class="web-app"
+BROWSER=`isMac && echo $MAC_OS_BROWSER || echo $LINUX_OS_BROWSER`
+
+eval "$BROWSER" --app="https://www.evernote.com/client/web?login=true" --class="web-app"
 

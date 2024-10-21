@@ -31,11 +31,13 @@
         - git
         - git-gui
         - git-lfs
+        - git-quick-stats # optional
         - git-delta # optional
         - gitui   # optional
         - lazygit # optional
         - htop
         - curl
+        - fswatch
         - gnu-sed
         - tree
         - bzip2 # support for .bz2 archives
@@ -86,10 +88,10 @@
         - docker # https://stackoverflow.com/a/40523608
         - meetingbar
         - brave-browser
-        - arc # optional browser
+        - arc # optional browser   
         - alacritty
         - visual-studio-code
-        - intellij-idea # or -ce
+        - intellij-idea # or -ce 
         - nikitabobko/tap/aerospace
         - karabiner-elements
         - bluesnooze
@@ -241,8 +243,10 @@
         create: true
       loop:
         - PATH="$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin:$PATH"
+        - PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
         - PATH="/opt/homebrew/opt/util-linux/bin:$PATH"
         - PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+        - PATH="$HOME/.docker/bin:$PATH"
     
     - name: enable git lfs # in case of issues https://stackoverflow.com/a/76578109
       shell: git lfs install

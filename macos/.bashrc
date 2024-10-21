@@ -160,12 +160,12 @@ then
     paulirish/git-open \
     paulirish/git-recent \
       atload'export _MENU_THEME=legacy' \
-    arzzen/git-quick-stats \
-      make'install' \
     tj/git-extras \
       make'GITURL_NO_CGITURL=1' \
       sbin'git-url;git-guclone' \
     zdharma-continuum/git-url
+    # arzzen/git-quick-stats \ # installed by brew
+    #   make'install' \
 
   zinit ice as"program"
   zinit snippet https://github.com/unixorn/fzf-zsh-plugin/blob/main/bin/fzf-git-branch

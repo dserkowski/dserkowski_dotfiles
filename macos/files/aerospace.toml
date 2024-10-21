@@ -261,9 +261,10 @@ rS = 3
 
 # aerospace list-apps
 
-[[on-window-detected]]
-check-further-callbacks = true
-run = 'layout tiling' # tiles
+# temporarly dispaled - because of pop-up windows
+#[[on-window-detected]]
+#check-further-callbacks = true
+#run = 'layout tiling' # tiles
 
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'

@@ -86,8 +86,8 @@ alt-ctrl-shift-t = ['exec-and-forget zsh -ic "typeDateTime.sh"']
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
-alt-shift-n = 'layout tiles'   # fixes
-alt-shift-m = 'layout tiling'  # fixes
+alt-shift-n = 'layout tiles'   # fixes - disables floating mode
+alt-shift-m = 'layout tiling'  # fixes - disables floating mode
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#focus
 #alt-h = 'focus left'
@@ -231,6 +231,7 @@ esc = 'mode main'
 [workspace-to-monitor-force-assignment]
 # implication: you cannot move assigned workspace to different monitor by alt-shift-tab
 intellij1 = 2 # Sequence number of the monitor from left to right. 1-based indexing   
+# middle display
 1 = 2
 2 = 2
 3 = 2
@@ -241,7 +242,7 @@ S = 2
 X = 2
 8 = 2
 9 = 2
-
+# left display
 G = 1
 Q = 1
 A = 1
@@ -249,7 +250,7 @@ Z = 1
 7 = 1
 V = 1
 lS = 1
-
+# right display
 E = 3
 R = 3
 D = 3
@@ -294,6 +295,11 @@ if.app-id = 'com.google.Chrome'
 if.window-title-regex-substring = 'evernote'
 check-further-callbacks = false # false is default 
 run = 'move-node-to-workspace R'
+[[on-window-detected]]
+if.app-id = 'com.evernote.Evernote'
+if.window-title-regex-substring = 'evernote'
+check-further-callbacks = false # false is default 
+run = 'move-node-to-workspace S'
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = 'move-node-to-workspace W'

@@ -105,13 +105,13 @@
         - monitorcontrol # control brightness on all screens
         # - fig # https://github.com/withfig/autocomplete
         # minor dev dependecies
-      
 
     - name: Install packages via mas (Mac Apple Store cli)
       shell: 'source ~/.zshrc && mas install {{ item }}'
       loop:
         # if doesn't work - reinstall computer OR go to App Store and try to install manually
         - 1352778147 # == mac search Bitwarden 
+
 
     - name: Install aerospace config
       # https://docs.ansible.com/ansible/latest/collections/ansible/builtin/file_module.html

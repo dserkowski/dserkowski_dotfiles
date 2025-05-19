@@ -67,6 +67,7 @@
         - moreutils # `| ts` command that adds timestamp
         - libpq # psql pg_dump
         - inetutils # gping6
+        - kubectl
         #- gcc # pyenv needs that to complie python during installation
 
     - name: Install brew cask packages
@@ -200,6 +201,7 @@
         #   with_items: 
             #- eval "$(jenv init -)" # done by zinit lazily
             # setting JAVA_HOME when refreshing env and when excecuting 'cd'
+            # replaced by chpwd hook
             #- setJavaHome
             # - alias cd=cdAndSetJavaHome
             # - unaliasIfExists cd

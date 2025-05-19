@@ -299,7 +299,7 @@ run = 'move-node-to-workspace R'
 if.app-id = 'com.evernote.Evernote'
 if.window-title-regex-substring = 'evernote'
 check-further-callbacks = false # false is default 
-run = 'move-node-to-workspace S'
+run = 'move-node-to-workspace X'
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
 run = 'move-node-to-workspace W'

@@ -17,18 +17,41 @@ then
   bindkey "\033[H" beginning-of-line
   bindkey "\033[F" end-of-line
   # also see https://stackoverflow.com/a/2019377
+
+  autoload -U add-zsh-hook
+
+  # Dev environment switers: jEnv, pyEnv
+  function setJavaHome() { # optimal version of setting JAVA_HOME
+      local OLD_JAVA_HOME="${JAVA_HOME-}"
+      [[ -d $HOME/.jenv/shims ]] && export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
+      [[ "$OLD_JAVA_HOME" != "$JAVA_HOME" ]] && echo "JAVA_HOME changed to: $JAVA_HOME" >&2 
+  }
+  add-zsh-hook chpwd setJavaHome
+
+  function ls_after_cd() {
+    ls
+  }
+  add-zsh-hook chpwd ls_after_cd
+
+  function git_status_if_git_dir_after_cd() {
+    if git rev-parse --is-inside-work-tree &>/dev/null; then
+      echoYellow "Git current branch '$(git rev-parse --abbrev-ref HEAD)'"
+      git branch --show-current
+      echoYellow "Git status for '$(pwd):'"
+      git status -s
+      echoYellow "Git diff stat for '$(pwd):'"
+      git diff --stat
+    fi
+  }
+  add-zsh-hook chpwd git_status_if_git_dir_after_cd
+
 fi
 
-# Dev environment switers: jEnv, pyEnv
-function setJavaHome() { # optimal version of setting JAVA_HOME
-    local OLD_JAVA_HOME="${JAVA_HOME-}"
-    [[ -d $HOME/.jenv/shims ]] && export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
-    [[ "$OLD_JAVA_HOME" != "$JAVA_HOME" ]] && echo "JAVA_HOME changed to: $JAVA_HOME" >&2 
-}
-function chpwd () { # cd hook - fix for jenv 'export' plugin slowness on MacOs - https://github.com/jenv/jenv/issues/178
-    setJavaHome
-    ls # print ls on every dir change
-}
+# DEPRECATED 
+#function chpwd () { # 'alias cd='' hook - fix for jenv 'export' plugin slowness on MacOs - https://github.com/jenv/jenv/issues/178
+#    setJavaHome
+#    ls # print ls on every dir change
+#}
 
 #function periodic() { # hook
   # echo "periodic run"

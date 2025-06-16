@@ -4,5 +4,4 @@
 BROWSER=`isMac && echo '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' || echo 'brave'`
 #BROWSER=`isMac && echo '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser' || echo 'brave'`
 
-("$BROWSER" --app="https://www.evernote.com/client/web?login=true" --class="web-app" 1> /dev/null 2> /dev/null) &
-
+("$BROWSER" --app="https://calendar.google.com/calendar/u/0/r/week" --class="web-app" 1> /dev/null 2> /dev/null) &

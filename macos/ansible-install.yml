@@ -68,6 +68,7 @@
         - libpq # psql pg_dump
         - inetutils # gping6
         - kubectl
+        - pre-commit
         #- gcc # pyenv needs that to complie python during installation
 
     - name: Install brew cask packages

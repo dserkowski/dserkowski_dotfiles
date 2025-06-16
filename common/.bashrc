@@ -323,4 +323,30 @@ function tmpCleanup() { # WIP
   #find "$MY_TMP" -type f -mtime +60 -delete
 }
 
+waitForUrl() {
+   local url=${1:? missing url}
+   shift
+   local expectedCodes=("$@")
+   if [[ ${#expectedCodes[@]} -eq 0 ]]; then
+      expectedCodes=("200")
+   fi
+
+   ready="0"
+   while [[ "$ready" == "0" ]]; do
+      printf '_'
+      sleep 1
+      responseCode=$(curl --write-out '%{http_code}' --silent --output /dev/null $url || echo "-1")
+      >&2 echo "ResponseCode: $responseCode (expected any of: ${expectedCodes[*]})"
+      
+      for code in "${expectedCodes[@]}"; do
+         if [[ "$responseCode" == "$code" ]]; then
+            ready="1"
+            break
+         fi
+      done
+   done
+
+   >&2 echo "URL is ready!"
+}
+
 export COMMON_BASHRC_INITIALIZED="1"

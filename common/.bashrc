@@ -146,6 +146,20 @@ alias lf='ls -la | grep'
 alias ls='ls --color=auto'
 
 ### apps aliases / functions ###
+function gitlog() {(
+    git log --pretty=format:'%C(yellow)%h | %Cred%ad |-------| %Creset%s |-------| %Cblue%an | %Cgreen%d' --date=short | head -n 4
+)}
+function gitlogdiff() {(
+    if [[ -z "$1" ]]; then
+        >&2 echo 'ERROR: hash $1 missing'
+        return
+    fi
+    if [[ -z "$2" ]]; then
+        >&2 echo 'ERROR: hash $2 missing'
+        return
+    fi
+    git log --pretty=format:'%C(yellow)%h | %Cred%ad |-------| %Creset%s |-------| %Cblue%an | %Cgreen%d' --date=short $1..$2
+)}
 alias g='git'
 alias gui='gitui'
 function gCloneOrUpdate() {
@@ -240,7 +254,7 @@ function runEn() {
 }
 
 function runWebApps() {(
-    set -ex
+    set -eu
     bash app_evernote.sh
     bash app_gmail.sh
     bash app_gmail_brave.sh
@@ -249,6 +263,20 @@ function runWebApps() {(
     bash app_calendar_brave.sh
     bash app_calendar.sh
     bash app_intervals.sh
+    echo "Web apps ready!"
+)}
+
+function calcDiskUsage() {(
+    echo "Docker disk usage:"; docker system df
+    echo "Home directory files"; du -sh ~/{*,.*} 2>/dev/null | sort -hr
+    echo "Application size"; du -sh ~/Library/Application\ Support/* 2>/dev/null | sort -hr
+    echo "Cache size"; du -sh ~/Library/Cache/* 2>/dev/null | sort -hr
+    echo "Repos size"; du -sh ~/repos/{*,.*} 2>/dev/null | sort -hr
+
+    #echo ".m2 directory size:"; du -sh ~/.m2
+    #echo "Home directory size:"; du -sh ~
+    #echo "Home directory Loom:"; du -sh ~/Library/Application\ Support/Loom
+    #du -sh ~/Library/Caches/com.loom.desktop
 )}
 
 export COLOR_PREFIX=$(printf '\033')

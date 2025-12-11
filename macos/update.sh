@@ -7,6 +7,7 @@ set -x
 brew update
 brew upgrade --greedy # greedy to upgrade --cask packages too
 brew cleanup
+# if cache is big you can use `brew cleanup --prune 15` - leaving max last 15 day updates
 
 gCloneOrUpdate https://github.com/alacritty/alacritty-theme $LIBS/alacritty-theme
 

@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 [[ -f ~/.zshrc ]] && source ~/.zshrc || source ~/.bashrc
 
 BROWSER=`isMac && echo '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' || echo 'brave'`

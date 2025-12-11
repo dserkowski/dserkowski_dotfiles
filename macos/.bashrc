@@ -35,12 +35,23 @@ then
 
   function git_status_if_git_dir_after_cd() {
     if git rev-parse --is-inside-work-tree &>/dev/null; then
-      echoYellow "Git current branch '$(git rev-parse --abbrev-ref HEAD)'"
-      git branch --show-current
-      echoYellow "Git status for '$(pwd):'"
+
+      echoYellow "Git current branch ('$(pwd):')"
+      echo "$(git branch --show-current) ($(git rev-parse --abbrev-ref HEAD))"
+      echo "hash: '$(git rev-parse --short HEAD)' ('$(git rev-parse HEAD)')"
+      echo "---"
+
+      echoYellow "Git status ('$(pwd):')"
       git status -s
-      echoYellow "Git diff stat for '$(pwd):'"
-      git diff --stat
+      echo "---"
+
+      echoYellow "Git log ('$(pwd):')"
+      # git log | head
+      gitlog
+      echo "---"
+
+      # echoYellow "Git diff stat for '$(pwd):'"
+      # git diff --stat
     fi
   }
   add-zsh-hook chpwd git_status_if_git_dir_after_cd

@@ -266,7 +266,6 @@ automatically-unhide-macos-hidden-apps = false
         8 = 2
         9 = 2
         # left display
-        G = 1
         Q = 1
         A = 1
         Z = 1
@@ -281,6 +280,7 @@ automatically-unhide-macos-hidden-apps = false
         0 = 3
         B = 3
         T = 3
+        G = 3
         rS = 3
 
 # aerospace list-apps

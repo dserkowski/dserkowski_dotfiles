@@ -229,6 +229,8 @@ function _internetCheck() {
     (NODE_NO_WARNINGS=1 npx dserkowski/speed-cloudflare-cli | tee /dev/stderr | grep -q ' WARN' && echoBoldRed " WARN: internet stats error")
 
     echo "Experimental checks:"
+    echo "httpCheck: httpstat www.google.com"
+    (httpstat www.google.com)
     internetCheck.sh
     # echo "=--="
 }
@@ -267,12 +269,14 @@ function runWebApps() {(
 )}
 
 function calcDiskUsage() {(
-    echo "Docker disk usage:"; docker system df
-    echo "Home directory files"; du -sh ~/{*,.*} 2>/dev/null | sort -hr
-    echo "Application size"; du -sh ~/Library/Application\ Support/* 2>/dev/null | sort -hr
-    echo "Cache size"; du -sh ~/Library/Cache/* 2>/dev/null | sort -hr
-    echo "Repos size"; du -sh ~/repos/{*,.*} 2>/dev/null | sort -hr
+    echoYellow "== Docker disk usage:"; docker system df
+    echoYellow "== Home directory files"; du -sh ~/{*,.*} 2>/dev/null | sort -hr | head -n 10
+    echoYellow "== Repos size"; du -sh ~/repos/{*,.*} 2>/dev/null | sort -hr | head -n 10
 
+    # MacOs specific
+    echoYellow "== MacOs: Library dir in home:"; du -sh ~/Library/{*,.*} 2>/dev/null | sort -hr | head -n 10
+    echoYellow "== MacOs: Application Support size"; du -sh ~/Library/Application\ Support/* 2>/dev/null | sort -hr | head -n 10
+    echoYellow "== MacOs: Cache size"; du -sh ~/Library/Caches/* 2>/dev/null | sort -hr | head -n 10
     #echo ".m2 directory size:"; du -sh ~/.m2
     #echo "Home directory size:"; du -sh ~
     #echo "Home directory Loom:"; du -sh ~/Library/Application\ Support/Loom
@@ -363,7 +367,7 @@ waitForUrl() {
    while [[ "$ready" == "0" ]]; do
       printf '_'
       sleep 1
-      responseCode=$(curl --write-out '%{http_code}' --silent --output /dev/null $url || echo "-1")
+      responseCode=$(curl --write-out '%{http_code}' --silent --location --output /dev/null $url || echo "-1")
       >&2 echo "ResponseCode: $responseCode (expected any of: ${expectedCodes[*]})"
       
       for code in "${expectedCodes[@]}"; do

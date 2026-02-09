@@ -69,6 +69,7 @@
         - inetutils # gping6
         - kubectl
         - pre-commit
+        - libb2
         #- gcc # pyenv needs that to complie python during installation
 
     - name: Install brew cask packages

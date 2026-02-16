@@ -21,11 +21,11 @@ then
   autoload -U add-zsh-hook
 
   # Dev environment switers: jEnv, pyEnv
-  function setJavaHome() { # optimal version of setting JAVA_HOME
+  function setJavaHome() {( # optimal version of setting JAVA_HOME
       local OLD_JAVA_HOME="${JAVA_HOME-}"
       [[ -d $HOME/.jenv/shims ]] && export JAVA_HOME="$HOME/.jenv/versions/`jenv version-name`"
       [[ "$OLD_JAVA_HOME" != "$JAVA_HOME" ]] && echo "JAVA_HOME changed to: $JAVA_HOME" >&2 
-  }
+  )}
   add-zsh-hook chpwd setJavaHome
 
   function ls_after_cd() {
@@ -168,9 +168,9 @@ then
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # run `p10k configure` to recustomize
 
   # installs `httpstat www.google.com` commnad
-  zinit ice mv"httpstat.sh -> httpstat" \
-        pick"httpstat" as"program"
-  zinit snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+  zinit ice pick"httpstat" as"program"
+  zinit snippet https://github.com/babarot/httpstat/blob/main/httpstat
+
 
   # zinit ice mv"check_jitter.py -> check_jitter.py" \
   #       pick"check_jitter.py" as"program"

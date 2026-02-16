@@ -416,3 +416,7 @@ run = 'move-node-to-workspace T'
 [[on-window-detected]]
 if.app-id = 'com.brave.Browser'
 run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+if.app-id = 'com.whoosh.whooshgame'
+run = 'move-node-to-workspace 0'

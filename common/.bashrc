@@ -147,7 +147,11 @@ alias ls='ls --color=auto'
 
 ### apps aliases / functions ###
 function gitlog() {(
-    git log --pretty=format:'%C(yellow)%h | %Cred%ad |-------| %Creset%s |-------| %Cblue%an | %Cgreen%d' --date=short | head -n 4
+    local numLines=7
+    if [[ -n "$1" ]]; then
+        numLines="$1"
+    fi
+    git log --pretty=format:'%C(yellow)%h | %Cred%ad |-------| %Creset%s |-------| %Cblue%an | %Cgreen%d' --date=short --date=format-local:'%Y-%m-%d %a %H:%M:%S' -n "$numLines"
 )}
 function gitlogdiff() {(
     if [[ -z "$1" ]]; then
@@ -160,6 +164,20 @@ function gitlogdiff() {(
     fi
     git log --pretty=format:'%C(yellow)%h | %Cred%ad |-------| %Creset%s |-------| %Cblue%an | %Cgreen%d' --date=short $1..$2
 )}
+function gitResetFile() {( set -e                                                                                                                                                                                                                                 
+  local file="$1"                                                                                                                                                                                                                                            
+  if [[ -z "$file" ]]; then                                                                                                                                                                                                                                  
+    echo "Usage: git-reset-file-to-master <file-path>" >&2                                                                                                                                                                                                   
+    return 1                                                                                                                                                                                                                                                 
+  fi                                                                                                                                                                                                                                                         
+  local merge_base                                                                                                                                                                                                                                           
+  merge_base=$(git merge-base HEAD origin/master)                                                                                                                                                                                                            
+  echo "Merge base: $merge_base"                                                                                                                                                                                                                             
+  git checkout "$merge_base" -- "$file"                                                                                                                                                                                                                      
+  echo "Reset '$file' to merge-base state."                                                                                                                                                                                                                  
+)} 
+alias gmb='git merge-base HEAD origin/master'
+
 alias g='git'
 alias gui='gitui'
 function gCloneOrUpdate() {

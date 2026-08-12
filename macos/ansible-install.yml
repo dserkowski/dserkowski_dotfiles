@@ -103,7 +103,7 @@
         #- slack # with force
         - flameshot
         - grammarly-desktop
-        - yubico-yubikey-manager
+        - ykman
         - yubico-authenticator
         - monitorcontrol # control brightness on all screens
         # - fig # https://github.com/withfig/autocomplete
@@ -155,16 +155,29 @@
           file:
             path: ~/.nvm
             state: directory
-        - name: .zshenv setup
-          lineinfile:
-            state: present
+        - name: .zshenv nvm setup
+          blockinfile:
             path: ~/.zshenv
-            line: "{{ item }}"
             create: true
-          with_items: 
-              - export NVM_DIR="$HOME/.nvm"
-              - alias nvm='unalias nvm; [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"; nvm $@'
-              - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"'
+            marker: "# {mark} ANSIBLE MANAGED BLOCK - nvm"
+            block: |
+              export NVM_DIR="$HOME/.nvm"
+              nvm() {
+                unset -f nvm
+                [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"
+                nvm "$@"
+              }
+        # OLD
+        # - name: .zshenv setup
+        #   lineinfile:
+        #     state: present
+        #     path: ~/.zshenv
+        #     line: "{{ item }}"
+        #     create: true
+        #   with_items: 
+        #       - export NVM_DIR="$HOME/.nvm"
+        #       - alias nvm='unalias nvm; [ -s "$(brew --prefix)/opt/nvm/nvm.sh" ] && . "$(brew --prefix)/opt/nvm/nvm.sh"; nvm $@'
+        #       - '[ -s "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm" ] && . "$HOMEBREW_PREFIX/opt/nvm/etc/bash_completion.d/nvm"'
         - name: Install node and set as default
           shell: source "$(brew --prefix)/opt/nvm/nvm.sh" && nvm install lts/* --default
         - name: Use the node in the current session

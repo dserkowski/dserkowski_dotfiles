@@ -139,6 +139,8 @@ function addLineToRcOnce() {
 
 ### navigation ###
 alias ..='cd ..'
+alias ...="cd ../.."
+alias ....="cd ../../.."
 alias dotfiles='cd $DOTFILES_PATH'
 alias repos='cd $REPOS'
 alias ll='ls -la'

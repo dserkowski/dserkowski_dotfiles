@@ -88,6 +88,7 @@
         - temurin@11
         - corretto@17
         - corretto@21
+        - corretto@25
         - docker # https://stackoverflow.com/a/40523608
         - meetingbar
         - brave-browser
@@ -205,6 +206,8 @@
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 1.8 )"
         - name: add JDK21
           shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 21 )"
+        - name: add JDK25
+          shell: source ~/.zshrc && jenv add "$( /usr/libexec/java_home -v 25 )"
         - name: set JDK11 as default
           shell: source ~/.zshrc && jenv global 11.0
         # - name: .zshrc setup 

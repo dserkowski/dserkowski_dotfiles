@@ -335,7 +335,7 @@ run = 'move-node-to-workspace R'
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace W'
+run = 'move-node-to-workspace Q'
 
 [[on-window-detected]]
 if.app-id = 'company.thebrowser.dia'

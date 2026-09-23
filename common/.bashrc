@@ -401,4 +401,8 @@ waitForUrl() {
    >&2 echo "URL is ready!"
 }
 
+dockerMemUsage() {
+    docker_memory_usage_sub_by_name.py "$@"
+}
+
 export COMMON_BASHRC_INITIALIZED="1"
